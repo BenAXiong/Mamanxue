@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { resetFirstRun } from "../db/bootstrap";
+import { useTaskSignal } from "../store/taskSignal";
 
 export function SettingsPage() {
   const [resetStatus, setResetStatus] = useState<"idle" | "running" | "done" | "error">("idle");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const startTaskSignal = useTaskSignal((state) => state.startTask);
+  const completeTaskSignal = useTaskSignal((state) => state.completeTask);
+  const resetTaskSignal = useTaskSignal((state) => state.resetSignal);
+  const taskStatus = useTaskSignal((state) => state.status);
 
   const handleReset = async () => {
     const confirmed = window.confirm(
@@ -61,6 +66,26 @@ export function SettingsPage() {
         {feedback ? (
           <p className="text-xs text-slate-400">{feedback}</p>
         ) : null}
+      </div>
+      <div className="card space-y-3 p-4 text-sm">
+        <div className="space-y-1 text-slate-200">
+          <h2 className="text-lg font-semibold">Header task signal demo</h2>
+          <p className="text-xs text-slate-400">
+            Use these buttons to preview the task color signal in the logo.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={startTaskSignal} className="btn-secondary">
+            Start task (red)
+          </button>
+          <button type="button" onClick={completeTaskSignal} className="btn-primary">
+            Complete task (green)
+          </button>
+          <button type="button" onClick={resetTaskSignal} className="btn-secondary">
+            Reset
+          </button>
+        </div>
+        <p className="text-xs text-slate-500">Current signal: {taskStatus}</p>
       </div>
     </div>
   );

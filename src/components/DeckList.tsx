@@ -33,8 +33,7 @@ export function DeckList({
       <header className="space-y-1">
         <h2 className="text-xl font-semibold text-white">Decks</h2>
         <p className="text-sm text-slate-400">
-          Choose a deck to review. Missing audio files are flagged for quick
-          fixes.
+          Add workflow here.
         </p>
       </header>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -105,3 +104,4 @@ function DeckCard({ summary, isSelected, onSelect }: DeckCardProps) {
 }
 
 export default DeckList;
+

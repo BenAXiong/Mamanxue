@@ -22,3 +22,4 @@ P2.6 - Built a landing page with due counts, continue CTA, and last deck recall 
 P2.7 - Added Dexie logging table and helpers to record graded sessions with duration metadata for future stats.
 P2.8 - Organized audio assets into deck-specific folders with tooling to rewrite references.
 P2.9 - Tailwind v4 migration adjustments and refreshed header navigation with options dropdown.
+P2.10 - Added header task signal store with settings demo controls for visual status feedback.

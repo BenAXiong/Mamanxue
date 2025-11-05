@@ -118,20 +118,10 @@
   }
 
   .options-trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding-right: 0.85rem;
-    padding-left: 0.85rem;
+    list-style: none;
   }
-
   .options-trigger::-webkit-details-marker {
     display: none;
-  }
-
-  details.options[open] .options-trigger {
-    background-color: rgba(37, 99, 235, 0.85);
-    color: #ffffff;
   }
 
   .card {
