@@ -32,9 +32,7 @@ export function DeckList({
     <section className="card space-y-4 p-6">
       <header className="space-y-1">
         <h2 className="text-xl font-semibold text-white">Decks</h2>
-        <p className="text-sm text-slate-400">
-          deesctiption.
-        </p>
+        <p className="text-sm text-slate-400">add a desc</p>
       </header>
       <div className="grid gap-3 sm:grid-cols-2">
         {summaries.map((summary) => (
