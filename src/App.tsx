@@ -1,5 +1,5 @@
 import { BrowserRouter, NavLink, Navigate, Route, Routes } from "react-router-dom";
-import ImportExportPage from "./routes/import";
+import { ImportExportPage } from "./routes/import";
 import ReviewPage from "./routes/review";
 
 const navLinkClasses =
