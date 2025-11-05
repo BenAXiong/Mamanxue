@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, NavLink, Navigate, Route, Routes } from "react-router-dom";
+import ImportExportPage from "./routes/import";
+import ReviewPage from "./routes/review";
+
+const navLinkClasses =
+  "inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold transition";
+
+const activeClasses = "bg-blue-600 text-white shadow";
+const inactiveClasses = "text-slate-300 hover:text-white hover:bg-slate-800/80";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <div className="min-h-screen bg-slate-950 text-slate-100">
+        <header className="border-b border-slate-800 bg-slate-950/70 backdrop-blur">
+          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+            <div className="flex items-center gap-3">
+              <span className="text-lg font-semibold text-white">
+                Mamanxue
+              </span>
+              <span className="text-xs uppercase tracking-widest text-slate-500">
+                Phase 1
+              </span>
+            </div>
+            <nav className="flex items-center gap-2">
+              <NavLink
+                to="/review"
+                end
+                className={({ isActive }) =>
+                  `${navLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
+                Review
+              </NavLink>
+              <NavLink
+                to="/import"
+                className={({ isActive }) =>
+                  `${navLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
+                Import / Export
+              </NavLink>
+            </nav>
+          </div>
+        </header>
+
+        <main className="mx-auto w-full max-w-5xl px-4 pb-16">
+          <Routes>
+            <Route path="/" element={<Navigate to="/review" replace />} />
+            <Route path="/review" element={<ReviewPage />} />
+            <Route path="/import" element={<ImportExportPage />} />
+          </Routes>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
