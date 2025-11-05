@@ -41,7 +41,7 @@ export function Footer() {
         hidden ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
-      <p>Built with love for spaced repetition · MamanXue</p>
+      <p>Built with love for spaced repetition · 曼曼學</p>
     </footer>
   );
 }

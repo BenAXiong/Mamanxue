@@ -6,7 +6,14 @@ interface DeckListProps {
   onSelect: (deckId: string) => void;
 }
 
-export function DeckList({ summaries, selectedDeckId, onSelect }: DeckListProps) {
+const CHECK = "\u2714"; // ✔
+const CROSS = "\u2716"; // ✖
+
+export function DeckList({
+  summaries,
+  selectedDeckId,
+  onSelect,
+}: DeckListProps) {
   if (!summaries.length) {
     return (
       <section className="card space-y-3 p-6">
@@ -51,21 +58,36 @@ interface DeckCardProps {
 }
 
 function DeckCard({ summary, isSelected, onSelect }: DeckCardProps) {
+  const hasMissingAudio = summary.missingAudio.length > 0;
+  const badgeLabel = hasMissingAudio ? CROSS : CHECK;
+
   return (
     <button
       type="button"
       onClick={() => onSelect(summary.deckId)}
-      className={`card space-y-2 p-4 text-left transition hover:border-blue-500 hover:shadow-lg ${isSelected ? "border-blue-500 shadow-lg" : ""}`}
+      className={`card space-y-2 p-4 text-left transition hover:border-blue-500 hover:shadow-lg ${
+        isSelected ? "border-blue-500 shadow-lg" : ""
+      }`}
     >
       <div className="flex items-center justify-between">
         <span className="text-lg font-semibold text-white">
           {summary.deckId}
         </span>
-        <span className="text-xs font-medium text-slate-400">
-          {summary.count} card{summary.count === 1 ? "" : "s"}
+        <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-200">
+          <span
+            className={`text-base font-bold ${
+              hasMissingAudio ? "text-red-400" : "text-emerald-300"
+            }`}
+            aria-label={hasMissingAudio ? "Missing audio" : "All audio present"}
+          >
+            {badgeLabel}
+          </span>
+          <span>
+            {summary.count} Card{summary.count === 1 ? "" : "s"}
+          </span>
         </span>
       </div>
-      {summary.missingAudio.length ? (
+      {hasMissingAudio ? (
         <div className="space-y-1 text-xs">
           <span className="inline-flex rounded-full bg-amber-500/20 px-2 py-1 font-semibold text-amber-100">
             Missing audio: {summary.missingAudio.length}
@@ -74,17 +96,12 @@ function DeckCard({ summary, isSelected, onSelect }: DeckCardProps) {
             {summary.missingAudio.slice(0, 3).map((path) => (
               <li key={path}>{path}</li>
             ))}
-            {summary.missingAudio.length > 3 ? (
-              <li>…and more</li>
-            ) : null}
+            {summary.missingAudio.length > 3 ? <li>…and more</li> : null}
           </ul>
         </div>
-      ) : (
-        <p className="text-xs text-green-300">All audio files found.</p>
-      )}
+      ) : null}
     </button>
   );
 }
 
 export default DeckList;
-

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Tai+Heritage+Pro:wght@400;600&family=Yuji+Syuku&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,6 +28,12 @@
 }
 
 @layer components {
+  .app-logo {
+    font-family: "Yuji Syuku", "Tai Heritage Pro", "Noto Serif TC", serif;
+    font-size: 1.75rem;
+    letter-spacing: 0.03em;
+  }
+
   .btn {
     display: inline-flex;
     align-items: center;
@@ -77,6 +84,7 @@
     background-color: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(12px);
     box-shadow: 0 16px 35px rgba(2, 6, 23, 0.45);
+    color: #e2e8f0;
   }
 }
 

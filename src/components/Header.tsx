@@ -9,7 +9,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4 sm:px-6 md:px-8">
-        <span className="text-lg font-semibold text-white">MamanXue</span>
+        <span className="app-logo text-white">曼曼學</span>
         <nav className="flex items-center gap-2">
           <NavLink
             to="/review"
