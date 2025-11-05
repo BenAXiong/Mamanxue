@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AppShell from "./AppShell";
+import CardBrowserPage from "./routes/browser";
 import HomePage from "./routes/home";
 import { ImportExportPage } from "./routes/import";
 import ReviewPage from "./routes/review";
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AppShell hideFooter />}>
           <Route path="review" element={<ReviewPage />} />
+          <Route path="browser" element={<CardBrowserPage />} />
         </Route>
         <Route path="/" element={<AppShell />}>
           <Route index element={<HomePage />} />

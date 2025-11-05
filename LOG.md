@@ -25,3 +25,9 @@ P2.9 - Tailwind v4 migration adjustments and refreshed header navigation with op
 P2.10 - Added codexStatus script and header tinting for Codex progress signals.
 
 
+P3.0 - Deck aggregation helpers and manager interface groundwork.
+P3.1 - Landing deck manager shows metrics, quick actions, and browse entry.
+P3.2 - Deck manager wiring for Open/Browse and live counts.
+P3.3 - Added deck rename/delete with cascaded card, review, and log updates.
+P3.4 - Card browser view with filters, audio controls, and suspend/hard actions.
+P3.5 - Added minimal stats snapshot with streaks and 7-day due forecast.
