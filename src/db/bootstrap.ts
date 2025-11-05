@@ -84,8 +84,9 @@ export async function resetFirstRun(): Promise<void> {
     window.localStorage.removeItem(FIRST_RUN_FLAG);
   }
 
-  await db.transaction("rw", db.cards, db.reviews, async () => {
+  await db.transaction("rw", db.cards, db.reviews, db.logs, async () => {
     await db.cards.clear();
     await db.reviews.clear();
+    await db.logs.clear();
   });
 }

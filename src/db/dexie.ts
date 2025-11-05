@@ -24,6 +24,16 @@ export interface ReviewState {
   hardFlag?: boolean;
 }
 
+export interface ReviewLogEntry {
+  id?: number;
+  when: string;
+  cardId: string;
+  deckId: string;
+  grade: 1 | 2 | 3;
+  mode: "input" | "output";
+  durationMs: number;
+}
+
 export function deriveDeckIdFromId(id?: string): string | undefined {
   if (!id) {
     return undefined;
@@ -42,6 +52,7 @@ export function deriveDeckIdFromId(id?: string): string | undefined {
 export class MamanXueDB extends Dexie {
   cards!: Table<Card, string>;
   reviews!: Table<ReviewState, string>;
+  logs!: Table<ReviewLogEntry, number>;
 
   constructor() {
     super("MamanXueDB");
@@ -67,6 +78,11 @@ export class MamanXueDB extends Dexie {
             }
           });
       });
+    this.version(3).stores({
+      cards: "id,deckId,audio",
+      reviews: "cardId,due",
+      logs: "++id,when,deckId,cardId",
+    });
   }
 }
 

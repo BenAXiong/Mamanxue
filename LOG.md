@@ -13,3 +13,10 @@ P1.5.7 - Implemented deck and progress JSON export using Blob downloads filtered
 P1.5.8 - Persisted column mapping presets in localStorage to auto-apply for matching CSV headers.
 P1.6 - Locked phone-first app shell with reusable buttons, sticky grade bar, and scroll-aware footer.
 P1.7 - Added deck bootstrap, Excel conversion script, deck manifest, and in-app deck management with reset control.
+P2.1 - Introduced Zustand session store with queue loading, reveal state, and hard revisit tracking.
+P2.2 - Implemented SM-2-lite scheduler helpers with Vitest coverage for interval progression and ease clamps.
+P2.3 - Added review persistence utilities for get/put and due-by-deck queries on Dexie.
+P2.4 - Daily queue builder filters suspended cards, prioritizes due reviews, and enqueues new cards within a configurable cap.
+P2.5 - Wired the review UI to the session store, handling mode toggles, reveal flow, grading persistence, and manual controls.
+P2.6 - Built a landing page with due counts, continue CTA, and last deck recall backed by localStorage/session store.
+P2.7 - Added Dexie logging table and helpers to record graded sessions with duration metadata for future stats.

@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AppShell from "./AppShell";
+import HomePage from "./routes/home";
 import { ImportExportPage } from "./routes/import";
 import ReviewPage from "./routes/review";
 import SettingsPage from "./routes/settings";
@@ -12,11 +13,11 @@ function App() {
           <Route path="review" element={<ReviewPage />} />
         </Route>
         <Route path="/" element={<AppShell />}>
-          <Route index element={<Navigate to="review" replace />} />
+          <Route index element={<HomePage />} />
           <Route path="import" element={<ImportExportPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/review" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "vitest",
     "generate:decks": "node scripts/xlsx-to-decks.mjs"
   },
   "dependencies": {
@@ -35,6 +36,8 @@
     "tailwindcss": "^4.1.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "vitest": "^3.0.5",
+    "jsdom": "^24.1.3"
   }
 }

@@ -5,7 +5,7 @@
       "id": "Nga_Fr_Lessons-005-001",
       "fr": "Je voudrais le préparer",
       "en": "I would like to prepare it",
-      "audio": "audio/rec1649342595.mp3",
+      "audio": "audio/1_5/rec1649342595.mp3",
       "deckId": "1_5",
       "sequence": 1,
       "externalId": "Nga_Fr_Lessons-005-001"
@@ -14,7 +14,7 @@
       "id": "Nga_Fr_Lessons-005-002",
       "fr": "Je peux préparer le diner",
       "en": "I can prepare the dinner",
-      "audio": "audio/rec1649342601.mp3",
+      "audio": "audio/1_5/rec1649342601.mp3",
       "deckId": "1_5",
       "sequence": 2,
       "externalId": "Nga_Fr_Lessons-005-002"
@@ -23,7 +23,7 @@
       "id": "Nga_Fr_Lessons-005-003",
       "fr": "Je peux le préparer",
       "en": "I can prepare it",
-      "audio": "audio/rec1649342606.mp3",
+      "audio": "audio/1_5/rec1649342606.mp3",
       "deckId": "1_5",
       "sequence": 3,
       "externalId": "Nga_Fr_Lessons-005-003"
@@ -32,7 +32,7 @@
       "id": "Nga_Fr_Lessons-005-004",
       "fr": "Elle peux le manger",
       "en": "She can eat it",
-      "audio": "audio/rec1649342614.mp3",
+      "audio": "audio/1_5/rec1649342614.mp3",
       "deckId": "1_5",
       "sequence": 4,
       "externalId": "Nga_Fr_Lessons-005-004"
@@ -41,7 +41,7 @@
       "id": "Nga_Fr_Lessons-005-005",
       "fr": "Elle peut le faire aujourd'hui",
       "en": "She can do it today",
-      "audio": "audio/rec1649342630.mp3",
+      "audio": "audio/1_5/rec1649342630.mp3",
       "deckId": "1_5",
       "sequence": 5,
       "externalId": "Nga_Fr_Lessons-005-005"
@@ -50,7 +50,7 @@
       "id": "Nga_Fr_Lessons-005-006",
       "fr": "Tu peux le faire demain",
       "en": "You can do it tomorrow",
-      "audio": "audio/rec1649342641.mp3",
+      "audio": "audio/1_5/rec1649342641.mp3",
       "deckId": "1_5",
       "notes": "tu",
       "sequence": 6,
@@ -60,9 +60,9 @@
       "id": "Nga_Fr_Lessons-005-007",
       "fr": "Est-ce que tu peux le faire aujourd'hui?",
       "en": "Can you do it today?",
-      "audio": "audio/rec1649342647.mp3",
+      "audio": "audio/1_5/rec1649342647.mp3",
       "deckId": "1_5",
-      "audio_slow": "audio/rec1649342757.mp3",
+      "audio_slow": "audio/1_5/rec1649342757.mp3",
       "notes": "tu, 3",
       "sequence": 7,
       "externalId": "Nga_Fr_Lessons-005-007"
@@ -71,7 +71,7 @@
       "id": "Nga_Fr_Lessons-005-008",
       "fr": "Je peux pas le manger",
       "en": "I cannot eat it",
-      "audio": "audio/rec1649342652.mp3",
+      "audio": "audio/1_5/rec1649342652.mp3",
       "deckId": "1_5",
       "sequence": 8,
       "externalId": "Nga_Fr_Lessons-005-008"
@@ -80,7 +80,7 @@
       "id": "Nga_Fr_Lessons-005-009",
       "fr": "Je peux pas le faire",
       "en": "I cannot do it",
-      "audio": "audio/rec1649342657.mp3",
+      "audio": "audio/1_5/rec1649342657.mp3",
       "deckId": "1_5",
       "sequence": 9,
       "externalId": "Nga_Fr_Lessons-005-009"
@@ -89,9 +89,9 @@
       "id": "Nga_Fr_Lessons-005-010",
       "fr": "On ne peut pas le manger aujourd'hui",
       "en": "We cannot eat it today",
-      "audio": "audio/rec1649342663.mp3",
+      "audio": "audio/1_5/rec1649342663.mp3",
       "deckId": "1_5",
-      "audio_slow": "audio/rec1649342766.mp3",
+      "audio_slow": "audio/1_5/rec1649342766.mp3",
       "notes": "on",
       "sequence": 10,
       "externalId": "Nga_Fr_Lessons-005-010"
@@ -100,7 +100,7 @@
       "id": "Nga_Fr_Lessons-005-011",
       "fr": "Je peux comprendre",
       "en": "I can understand",
-      "audio": "audio/rec1649342667.mp3",
+      "audio": "audio/1_5/rec1649342667.mp3",
       "deckId": "1_5",
       "sequence": 11,
       "externalId": "Nga_Fr_Lessons-005-011"
@@ -109,9 +109,9 @@
       "id": "Nga_Fr_Lessons-005-012",
       "fr": "Tu peux me comprendre?",
       "en": "Can you understand me?",
-      "audio": "audio/rec1649342672.mp3",
+      "audio": "audio/1_5/rec1649342672.mp3",
       "deckId": "1_5",
-      "audio_slow": "audio/rec1649342773.mp3",
+      "audio_slow": "audio/1_5/rec1649342773.mp3",
       "notes": "tu, 1",
       "sequence": 12,
       "externalId": "Nga_Fr_Lessons-005-012"
@@ -120,7 +120,7 @@
       "id": "Nga_Fr_Lessons-005-013",
       "fr": "Oui, je peux te comprendre!",
       "en": "Yes, I can understand you!",
-      "audio": "audio/rec1649342677.mp3",
+      "audio": "audio/1_5/rec1649342677.mp3",
       "deckId": "1_5",
       "notes": "tu",
       "sequence": 13,
@@ -130,7 +130,7 @@
       "id": "Nga_Fr_Lessons-005-014",
       "fr": "Je peux le comprendre (it or him)",
       "en": "I can understand it/him",
-      "audio": "audio/rec1649342682.mp3",
+      "audio": "audio/1_5/rec1649342682.mp3",
       "deckId": "1_5",
       "sequence": 14,
       "externalId": "Nga_Fr_Lessons-005-014"
@@ -139,7 +139,7 @@
       "id": "Nga_Fr_Lessons-005-015",
       "fr": "Je peux la comprendre (her)",
       "en": "I can understand her",
-      "audio": "audio/rec1649342693.mp3",
+      "audio": "audio/1_5/rec1649342693.mp3",
       "deckId": "1_5",
       "sequence": 15,
       "externalId": "Nga_Fr_Lessons-005-015"

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Tai+Heritage+Pro:wght@400;600&family=Yuji+Syuku&display=swap");
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
 
 @layer base {
   html {
@@ -39,7 +39,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    min-height: 48px;
+    min-height: 42px;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
     font-weight: 600;
@@ -76,6 +76,62 @@
 
   .btn-secondary:hover:not(:disabled) {
     background-color: #334155;
+  }
+
+  .options-popover {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    display: none;
+    min-width: 11rem;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background-color: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.45);
+    z-index: 20;
+  }
+
+  .options-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #e2e8f0;
+    font-size: 0.8125rem;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .options-link:hover {
+    background-color: rgba(51, 65, 85, 0.6);
+    color: #ffffff;
+  }
+
+  .options-link.active {
+    background-color: rgba(37, 99, 235, 0.85);
+    color: #ffffff;
+  }
+
+  details[open] .options-popover {
+    display: flex;
+  }
+
+  .options-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding-right: 0.85rem;
+    padding-left: 0.85rem;
+  }
+
+  .options-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  details.options[open] .options-trigger {
+    background-color: rgba(37, 99, 235, 0.85);
+    color: #ffffff;
   }
 
   .card {
