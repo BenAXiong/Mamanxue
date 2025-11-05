@@ -1,0 +1,98 @@
+{
+  "id": "1_1",
+  "cards": [
+    {
+      "id": "Nga_Fr_Lessons-001-001",
+      "fr": "J'ai invité un ami",
+      "en": "I have invited a friend",
+      "audio": "audio/1_1/rec1645544842.mp3",
+      "deckId": "1_1",
+      "sequence": 1,
+      "externalId": "Nga_Fr_Lessons-001-001"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-002",
+      "fr": "Tu as invité un ami",
+      "en": "You have invited a friend",
+      "audio": "audio/1_1/rec1645544856.mp3",
+      "deckId": "1_1",
+      "sequence": 2,
+      "externalId": "Nga_Fr_Lessons-001-002"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-003",
+      "fr": "As-tu invité un ami?",
+      "en": "Have you invited a friend?",
+      "audio": "audio/1_1/rec1645544867.mp3",
+      "deckId": "1_1",
+      "notes": "inf., 2",
+      "sequence": 3,
+      "externalId": "Nga_Fr_Lessons-001-003"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-004",
+      "fr": "Tu as invité un ami?",
+      "en": "Have you invited a friend?",
+      "audio": "audio/1_1/rec1645544873.mp3",
+      "deckId": "1_1",
+      "notes": "inf., 1",
+      "sequence": 4,
+      "externalId": "Nga_Fr_Lessons-001-004"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-005",
+      "fr": "J'ai confirmé le meeting avec Ben",
+      "en": "I have confirmed the meeting with Ben",
+      "audio": "audio/1_1/rec1645545058.mp3",
+      "deckId": "1_1",
+      "sequence": 5,
+      "externalId": "Nga_Fr_Lessons-001-005"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-006",
+      "fr": "J'ai visité Hanoi avec un ami",
+      "en": "I have visited Hanoi with a friend",
+      "audio": "audio/1_1/rec1645544930.mp3",
+      "deckId": "1_1",
+      "sequence": 6,
+      "externalId": "Nga_Fr_Lessons-001-006"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-007",
+      "fr": "J'ai preparé le café pour toi",
+      "en": "I have prepared coffee for you",
+      "audio": "audio/1_1/rec1645544942.mp3",
+      "deckId": "1_1",
+      "sequence": 7,
+      "externalId": "Nga_Fr_Lessons-001-007"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-008",
+      "fr": "Tu as preparé le café pour moi?",
+      "en": "Have you prepared the coffee for me?",
+      "audio": "audio/1_1/rec1645544953.mp3",
+      "deckId": "1_1",
+      "sequence": 8,
+      "externalId": "Nga_Fr_Lessons-001-008"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-009",
+      "fr": "Tu as visité Hanoi (avec un ami)?",
+      "en": "Have you visited Hanoi with a friend?",
+      "audio": "audio/1_1/rec1645544966.mp3",
+      "deckId": "1_1",
+      "sequence": 9,
+      "externalId": "Nga_Fr_Lessons-001-009"
+    },
+    {
+      "id": "Nga_Fr_Lessons-001-010",
+      "fr": "Tu as preparé le meeting avec Ben?",
+      "en": "Have you prepared the meeting with Ben?",
+      "audio": "audio/1_1/rec1645545970.mp3",
+      "deckId": "1_1",
+      "sequence": 10,
+      "externalId": "Nga_Fr_Lessons-001-010"
+    }
+  ]
+}
+

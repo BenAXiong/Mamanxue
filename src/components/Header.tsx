@@ -1,5 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useTaskSignal } from "../store/taskSignal";
+import codexStatus, { type CodexStatus } from "../codexStatus";
 
 const baseLinkClasses =
   "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition";
@@ -7,8 +8,39 @@ const inactiveClasses =
   "text-slate-200 hover:text-white hover:bg-slate-800/70";
 const activeClasses = "bg-blue-600 text-white shadow";
 
+const STATUS_COLORS: Record<CodexStatus, string> = {
+  idle: "#ffffff",
+  working: "#ef4444",
+  finishing: "#34d399",
+};
+
 export function Header() {
-  const logoColor = useTaskSignal((state) => state.color);
+  const status = codexStatus;
+  const [logoColor, setLogoColor] = useState<string>(STATUS_COLORS[status]);
+  const finishingTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const clearTimer = () => {
+      if (finishingTimerRef.current !== null && typeof window !== "undefined") {
+        window.clearTimeout(finishingTimerRef.current);
+        finishingTimerRef.current = null;
+      }
+    };
+
+    clearTimer();
+    setLogoColor(STATUS_COLORS[status]);
+
+    if (status === "finishing" && typeof window !== "undefined") {
+      finishingTimerRef.current = window.setTimeout(() => {
+        setLogoColor(STATUS_COLORS.idle);
+        finishingTimerRef.current = null;
+      }, 30_000);
+    }
+
+    return () => {
+      clearTimer();
+    };
+  }, [status]);
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
@@ -66,3 +98,4 @@ export function Header() {
 }
 
 export default Header;
+
