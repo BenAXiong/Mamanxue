@@ -20,3 +20,5 @@ P2.4 - Daily queue builder filters suspended cards, prioritizes due reviews, and
 P2.5 - Wired the review UI to the session store, handling mode toggles, reveal flow, grading persistence, and manual controls.
 P2.6 - Built a landing page with due counts, continue CTA, and last deck recall backed by localStorage/session store.
 P2.7 - Added Dexie logging table and helpers to record graded sessions with duration metadata for future stats.
+P2.8 - Organized audio assets into deck-specific folders with tooling to rewrite references.
+P2.9 - Tailwind v4 migration adjustments and refreshed header navigation with options dropdown.
