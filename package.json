@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "generate:decks": "node scripts/xlsx-to-decks.mjs"
+    "generate:decks": "node scripts/xlsx-to-decks.mjs",
+    "codex:status": "node scripts/update-codex-status.mjs"
   },
   "dependencies": {
     "dexie": "^4.2.1",
@@ -41,3 +42,4 @@
     "jsdom": "^24.1.3"
   }
 }
+

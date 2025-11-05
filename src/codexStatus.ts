@@ -1,6 +1,5 @@
-export type CodexStatus = 'idle' | 'working' | 'finishing';
+export type CodexStatus = "idle" | "working" | "finishing";
 
-const codexStatus: CodexStatus = 'idle';
+export const codexStatus: CodexStatus = "finishing";
 
 export default codexStatus;
-
