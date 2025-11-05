@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, DragEvent, FormEvent } from "react";
 import type { Card } from "../db/dexie";
-import { db } from "../db/dexie";
+import { db, deriveDeckIdFromId } from "../db/dexie";
 import { checkCardAudio } from "../utils/fileCheck";
 
 type MappingField =
@@ -10,6 +10,9 @@ type MappingField =
   | "en"
   | "audio"
   | "audio_slow"
+  | "notes"
+  | "deckId"
+  | "sequence"
   | "tags";
 
 interface CsvData {
@@ -23,6 +26,9 @@ interface FieldMapping {
   en: string | null;
   audio: string | null;
   audio_slow: string | null;
+  notes: string | null;
+  deckId: string | null;
+  sequence: string | null;
   tags: string | null;
 }
 
@@ -35,23 +41,29 @@ interface ImportReport {
 
 interface ManualFormState {
   id: string;
+  deckId: string;
   fr: string;
   en: string;
   audio: string;
   audio_slow: string;
+  notes: string;
+  sequence: string;
   tags: string;
 }
 
-const REQUIRED_FIELDS: MappingField[] = ["id", "fr", "en", "audio"];
-const OPTIONAL_FIELDS: MappingField[] = ["audio_slow", "tags"];
+const REQUIRED_FIELDS: MappingField[] = ["id", "deckId", "fr", "en", "audio"];
+const OPTIONAL_FIELDS: MappingField[] = ["audio_slow", "notes", "sequence", "tags"];
 const ALL_FIELDS: MappingField[] = [...REQUIRED_FIELDS, ...OPTIONAL_FIELDS];
 
 const FIELD_LABELS: Record<MappingField, string> = {
   id: "ID",
+  deckId: "Deck ID",
   fr: "French",
   en: "English",
   audio: "Audio",
   audio_slow: "Slow audio",
+  notes: "Notes",
+  sequence: "Sequence (order)",
   tags: "Tags",
 };
 
@@ -62,10 +74,13 @@ const MAX_MISSING_AUDIO_PREVIEW = 5;
 function createEmptyMapping(): FieldMapping {
   return {
     id: null,
+    deckId: null,
     fr: null,
     en: null,
     audio: null,
     audio_slow: null,
+    notes: null,
+    sequence: null,
     tags: null,
   };
 }
@@ -104,10 +119,13 @@ function guessMapping(headers: string[]): FieldMapping {
   };
 
   assign("id", ["id", "cardid"]);
+  assign("deckId", ["deckid", "deck", "lesson", "set"]);
   assign("fr", ["fr", "french"]);
   assign("en", ["en", "english"]);
   assign("audio", ["audio", "audiofile", "audiopath"]);
   assign("audio_slow", ["audioslow", "slowaudio"]);
+  assign("notes", ["notes", "note", "annotation"]);
+  assign("sequence", ["sequence", "order", "position", "sentence", "index"]);
   assign("tags", ["tags", "topics", "labels"]);
 
   return mapping;
@@ -220,10 +238,13 @@ function computeMappingIndices(
 ): Record<MappingField, number | null> {
   const indexMap: Record<MappingField, number | null> = {
     id: null,
+    deckId: null,
     fr: null,
     en: null,
     audio: null,
     audio_slow: null,
+    notes: null,
+    sequence: null,
     tags: null,
   };
 
@@ -270,15 +291,21 @@ function extractCardFromRow(
   const errors: string[] = [];
 
   const id = getCell(row, indices.id);
+  const deckIdCell = getCell(row, indices.deckId);
   const fr = getCell(row, indices.fr);
   const en = getCell(row, indices.en);
   const audio = getCell(row, indices.audio);
   const audioSlow = getCell(row, indices.audio_slow);
+  const notes = getCell(row, indices.notes);
+  const sequenceRaw = getCell(row, indices.sequence);
   const tagsInput = getCell(row, indices.tags);
 
   if (strict) {
     if (!id) {
       errors.push(`Row ${rowNumber}: missing id`);
+    }
+    if (!deckIdCell && !deriveDeckIdFromId(id)) {
+      errors.push(`Row ${rowNumber}: missing deckId`);
     }
     if (!fr) {
       errors.push(`Row ${rowNumber}: missing fr`);
@@ -295,8 +322,11 @@ function extractCardFromRow(
     return { errors };
   }
 
+  const resolvedDeckId = deckIdCell || deriveDeckIdFromId(id) || "";
+
   const card: Card = {
     id,
+    deckId: resolvedDeckId,
     fr,
     en,
     audio,
@@ -304,6 +334,15 @@ function extractCardFromRow(
 
   if (audioSlow) {
     card.audio_slow = audioSlow;
+  }
+
+  if (notes) {
+    card.notes = notes;
+  }
+
+  const numericSequence = Number(sequenceRaw);
+  if (!Number.isNaN(numericSequence)) {
+    card.sequence = numericSequence;
   }
 
   const tags = parseTags(tagsInput);
@@ -356,12 +395,19 @@ function buildPreviewRows(
     if (card) {
       rows.push(card);
     } else {
+      const rawSequence = getCell(row, indices.sequence);
+      const sequenceValue = rawSequence ? Number(rawSequence) : undefined;
       rows.push({
         id: getCell(row, indices.id),
+        deckId: getCell(row, indices.deckId),
         fr: getCell(row, indices.fr),
         en: getCell(row, indices.en),
         audio: getCell(row, indices.audio),
         audio_slow: getCell(row, indices.audio_slow),
+        notes: getCell(row, indices.notes),
+        sequence: !Number.isNaN(sequenceValue ?? NaN)
+          ? sequenceValue
+          : undefined,
         tags: parseTags(getCell(row, indices.tags)),
       });
     }
@@ -439,10 +485,13 @@ function downloadJson(data: unknown, filename: string) {
 
 const initialManualForm: ManualFormState = {
   id: "",
+  deckId: "",
   fr: "",
   en: "",
   audio: "",
   audio_slow: "",
+  notes: "",
+  sequence: "",
   tags: "",
 };
 export function ImportExportPage() {
@@ -764,9 +813,16 @@ export function ImportExportPage() {
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      const { id, fr, en, audio, audio_slow, tags } = manualForm;
+      const { id, deckId, fr, en, audio, audio_slow, notes, sequence, tags } =
+        manualForm;
 
-      if (!id.trim() || !fr.trim() || !en.trim() || !audio.trim()) {
+      if (
+        !id.trim() ||
+        !deckId.trim() ||
+        !fr.trim() ||
+        !en.trim() ||
+        !audio.trim()
+      ) {
         setManualStatus("All required fields must be filled in.");
         return;
       }
@@ -777,6 +833,7 @@ export function ImportExportPage() {
       try {
         const card: Card = {
           id: id.trim(),
+          deckId: deckId.trim(),
           fr: fr.trim(),
           en: en.trim(),
           audio: audio.trim(),
@@ -784,6 +841,17 @@ export function ImportExportPage() {
 
         if (audio_slow.trim()) {
           card.audio_slow = audio_slow.trim();
+        }
+
+        if (notes.trim()) {
+          card.notes = notes.trim();
+        }
+
+        if (sequence.trim()) {
+          const parsedSequence = Number(sequence);
+          if (!Number.isNaN(parsedSequence)) {
+            card.sequence = parsedSequence;
+          }
         }
 
         const parsedTags = parseTags(tags);
@@ -865,16 +933,16 @@ export function ImportExportPage() {
     }
   }, [exportDeckId]);
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 py-10">
-      <header className="px-4">
+    <div className="space-y-8 py-6">
+      <header className="space-y-1">
         <h1 className="text-3xl font-semibold text-white">Import / Export</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="text-sm text-slate-400">
           Bring decks into Dexie, add single cards, and export study data for
           backup.
         </p>
       </header>
 
-      <section className="mx-4 space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow">
+      <section className="card space-y-4 p-6">
         <header className="space-y-1">
           <h2 className="text-xl font-semibold text-white">CSV import</h2>
           <p className="text-sm text-slate-400">
@@ -892,7 +960,7 @@ export function ImportExportPage() {
             Choose a CSV file to import
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <label className="inline-flex cursor-pointer items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400">
+            <label className="btn-primary cursor-pointer">
               <input
                 type="file"
                 accept=".csv,text/csv"
@@ -943,10 +1011,7 @@ export function ImportExportPage() {
               </span>{" "}
               → CSV; sharing alone does not bypass CORS.
             </div>
-            <button
-              type="submit"
-              className="mt-1 inline-flex h-9 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-            >
+            <button type="submit" className="btn-primary mt-1">
               Fetch CSV
             </button>
             {sheetsStatus ? (
@@ -973,10 +1038,7 @@ export function ImportExportPage() {
               download is blocked by CORS, download manually and use the file
               picker above.
             </div>
-            <button
-              type="submit"
-              className="mt-1 inline-flex h-9 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-            >
+            <button type="submit" className="btn-secondary mt-1">
               Try fetch
             </button>
             {driveStatus ? (
@@ -1053,8 +1115,12 @@ export function ImportExportPage() {
                             rendered = value.join(", ");
                           } else if (typeof value === "string") {
                             rendered = value;
+                          } else if (typeof value === "number") {
+                            rendered = Number.isFinite(value) ? String(value) : "";
+                          } else if (value !== undefined && value !== null) {
+                            rendered = String(value);
                           } else {
-                            rendered = value ?? "";
+                            rendered = "";
                           }
 
                           return (
@@ -1082,7 +1148,7 @@ export function ImportExportPage() {
                 type="button"
                 onClick={handleImport}
                 disabled={!mappingComplete || importing}
-                className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition enabled:hover:bg-blue-500 enabled:focus-visible:outline enabled:focus-visible:outline-2 enabled:focus-visible:outline-offset-2 enabled:focus-visible:outline-blue-400 disabled:cursor-not-allowed disabled:bg-slate-700/80 disabled:text-slate-400"
+                className="btn-primary"
               >
                 {importing ? "Importing..." : "Import into Dexie"}
               </button>
@@ -1158,7 +1224,7 @@ export function ImportExportPage() {
         ) : null}
       </section>
 
-      <section className="mx-4 space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow">
+      <section className="card space-y-4 p-6">
         <header className="space-y-1">
           <h2 className="text-xl font-semibold text-white">Manual add</h2>
           <p className="text-sm text-slate-400">
@@ -1190,8 +1256,19 @@ export function ImportExportPage() {
               >
                 Auto
               </button>
-            </div>
           </div>
+        </div>
+
+          <label className="flex flex-col gap-1 text-sm text-slate-200">
+            <span className="font-medium">Deck ID</span>
+            <input
+              name="deckId"
+              value={manualForm.deckId}
+              onChange={handleManualChange}
+              className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+              placeholder="1_1"
+            />
+          </label>
 
           <label className="flex flex-col gap-1 text-sm text-slate-200">
             <span className="font-medium">Audio</span>
@@ -1201,6 +1278,18 @@ export function ImportExportPage() {
               onChange={handleManualChange}
               className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
               placeholder="audio/1_1/00002.mp3"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1 text-sm text-slate-200">
+            <span className="font-medium">Sequence (optional)</span>
+            <input
+              name="sequence"
+              value={manualForm.sequence}
+              onChange={handleManualChange}
+              className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+              placeholder="1"
+              inputMode="numeric"
             />
           </label>
 
@@ -1238,6 +1327,17 @@ export function ImportExportPage() {
           </label>
 
           <label className="flex flex-col gap-1 text-sm text-slate-200">
+            <span className="font-medium">Notes (optional)</span>
+            <textarea
+              name="notes"
+              value={manualForm.notes}
+              onChange={handleManualChange}
+              className="min-h-20 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+              placeholder="formality, usage notes"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1 text-sm text-slate-200">
             <span className="font-medium">Tags (comma separated)</span>
             <input
               name="tags"
@@ -1252,7 +1352,7 @@ export function ImportExportPage() {
             <button
               type="submit"
               disabled={manualSaving}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm transition enabled:hover:bg-blue-500 enabled:focus-visible:outline enabled:focus-visible:outline-2 enabled:focus-visible:outline-offset-2 enabled:focus-visible:outline-blue-400 disabled:cursor-not-allowed disabled:bg-slate-700/80 disabled:text-slate-400"
+              className="btn-primary"
             >
               {manualSaving ? "Saving..." : "Save card"}
             </button>
@@ -1263,7 +1363,7 @@ export function ImportExportPage() {
         </form>
       </section>
 
-      <section className="mx-4 space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow">
+      <section className="card space-y-4 p-6">
         <header className="space-y-1">
           <h2 className="text-xl font-semibold text-white">Export</h2>
           <p className="text-sm text-slate-400">
@@ -1287,14 +1387,14 @@ export function ImportExportPage() {
             <button
               type="button"
               onClick={handleExportDeck}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+              className="btn-primary"
             >
               Export deck JSON
             </button>
             <button
               type="button"
               onClick={handleExportProgress}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-slate-800 px-4 text-sm font-semibold text-slate-200 shadow-sm transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+              className="btn-secondary"
             >
               Export progress JSON
             </button>

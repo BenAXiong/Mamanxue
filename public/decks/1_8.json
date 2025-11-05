@@ -1,0 +1,158 @@
+{
+  "id": "1_8",
+  "cards": [
+    {
+      "id": "Nga_Fr_Lessons-008-001",
+      "fr": "C'est dangereux",
+      "en": "It's dangerous",
+      "audio": "audio/rec1652370946.mp3",
+      "deckId": "1_8",
+      "sequence": 1,
+      "externalId": "Nga_Fr_Lessons-008-001"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-002",
+      "fr": "Ah, on peut acheter des croissants pour Biscuit",
+      "en": "Ah, we can buy some croissants for Biscuit",
+      "audio": "audio/rec1652370970.mp3",
+      "deckId": "1_8",
+      "notes": "on",
+      "sequence": 2,
+      "externalId": "Nga_Fr_Lessons-008-002"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-003",
+      "fr": "On peut en acheter maintenant?",
+      "en": "Can we buy some now?",
+      "audio": "audio/rec1652370980.mp3",
+      "deckId": "1_8",
+      "notes": "on",
+      "sequence": 3,
+      "externalId": "Nga_Fr_Lessons-008-003"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-004",
+      "fr": "~ Je peux en manger?\r\n~ Oui, tu peux en manger, pas de probleme.",
+      "en": "~ Can I eat some?\r\n~ Yeah, you can eat some, no problem",
+      "audio": "audio/rec1652370991.mp3",
+      "deckId": "1_8",
+      "notes": "tu",
+      "sequence": 4,
+      "externalId": "Nga_Fr_Lessons-008-004"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-005",
+      "fr": "~ Il y a des chocolats a la maison.\r\n~ Je veux en prendre.",
+      "en": "~ There are chocolates at home.\r\n~ I want to take some.",
+      "audio": "audio/rec1652371016.mp3",
+      "deckId": "1_8",
+      "sequence": 5,
+      "externalId": "Nga_Fr_Lessons-008-005"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-006",
+      "fr": "~ Il y a du café?\r\n~ Non, je veux en préprarer.",
+      "en": "~ Is there coffee?\r\n~ No, I want to prepare some.",
+      "audio": "audio/rec1652371026.mp3",
+      "deckId": "1_8",
+      "sequence": 6,
+      "externalId": "Nga_Fr_Lessons-008-006"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-007",
+      "fr": "Je veux manger d'abord.",
+      "en": "I want to eat first.",
+      "audio": "audio/rec1652371035.mp3",
+      "deckId": "1_8",
+      "sequence": 7,
+      "externalId": "Nga_Fr_Lessons-008-007"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-008",
+      "fr": "~ Ah, tu as tres faim, c'est ca?\r\n~ Exactement!",
+      "en": "~ Ah, you're very hungry, right?\r\n~ Exactly!",
+      "audio": "audio/rec1652371042.mp3",
+      "deckId": "1_8",
+      "notes": "tu",
+      "sequence": 8,
+      "externalId": "Nga_Fr_Lessons-008-008"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-009",
+      "fr": "Comment est le diné? C'est bon?",
+      "en": "How is the dinner? Is it tasty?",
+      "audio": "audio/rec1652371050.mp3",
+      "deckId": "1_8",
+      "sequence": 9,
+      "externalId": "Nga_Fr_Lessons-008-009"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-010",
+      "fr": "Le diné est parfait, merci!",
+      "en": "The dinner is perfect, thanks!",
+      "audio": "audio/rec1652371056.mp3",
+      "deckId": "1_8",
+      "sequence": 10,
+      "externalId": "Nga_Fr_Lessons-008-010"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-011",
+      "fr": "~ Tu veux prendre un verre?\r\n~ Pourquoi pas! On peut discuter.",
+      "en": "~ You want to have a drink?\r\n~ Why not! We can chat.",
+      "audio": "audio/rec1652371066.mp3",
+      "deckId": "1_8",
+      "notes": "tu",
+      "sequence": 11,
+      "externalId": "Nga_Fr_Lessons-008-011"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-012",
+      "fr": "Je peux rester chez toi ce soir? C'est possible?",
+      "en": "Can I stay at your place tonight? Is it possible?",
+      "audio": "audio/rec1652371076.mp3",
+      "deckId": "1_8",
+      "notes": "tu",
+      "sequence": 12,
+      "externalId": "Nga_Fr_Lessons-008-012"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-013",
+      "fr": "~ Est-ce que je peux dormir chez toi ce soir?\r\n~ D'accord.",
+      "en": "~ Can I sleep at your place tonight?\r\n~ Alright.",
+      "audio": "audio/rec1652371087.mp3",
+      "deckId": "1_8",
+      "notes": "tu",
+      "sequence": 13,
+      "externalId": "Nga_Fr_Lessons-008-013"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-014",
+      "fr": "~ Où est ma chambre?\r\n~ Elle est là-bas.",
+      "en": "~ Where's my room?\r\n~ It's over there.",
+      "audio": "audio/rec1652371103.mp3",
+      "deckId": "1_8",
+      "sequence": 14,
+      "externalId": "Nga_Fr_Lessons-008-014"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-015",
+      "fr": "Je suis fatiguée. Je veux dormir maintenant.",
+      "en": "I'm tired. I want to sleep now.",
+      "audio": "audio/rec1652371111.mp3",
+      "deckId": "1_8",
+      "notes": "f.",
+      "sequence": 15,
+      "externalId": "Nga_Fr_Lessons-008-015"
+    },
+    {
+      "id": "Nga_Fr_Lessons-008-016",
+      "fr": "Est-ce que tu veux prendre ta douche d'abord?",
+      "en": "Do you want to take your shower first?",
+      "audio": "audio/rec1652371125.mp3",
+      "deckId": "1_8",
+      "notes": "tu",
+      "sequence": 16,
+      "externalId": "Nga_Fr_Lessons-008-016"
+    }
+  ]
+}

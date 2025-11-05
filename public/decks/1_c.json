@@ -1,0 +1,15 @@
+{
+  "id": "1_c",
+  "cards": [
+    {
+      "id": "Marker",
+      "fr": "Français",
+      "en": "English",
+      "audio": "audio/Audio",
+      "deckId": "1_c",
+      "audio_slow": "audio/Slow audio",
+      "notes": "Notes",
+      "externalId": "Marker"
+    }
+  ]
+}

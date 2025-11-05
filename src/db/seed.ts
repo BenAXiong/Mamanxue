@@ -9,15 +9,19 @@ interface DeckPayload {
 const ABSOLUTE_URL_PATTERN = /^https?:\/\//i;
 
 function normalizeAudioPath(path: string, deckId: string): string {
-  const trimmed = path.trim();
+  const safePath = typeof path === "string" ? path.trim() : "";
 
-  if (ABSOLUTE_URL_PATTERN.test(trimmed)) {
-    return trimmed;
+  if (!safePath) {
+    return "";
   }
 
-  const withoutLeadingSlash = trimmed.startsWith("/")
-    ? trimmed.slice(1)
-    : trimmed;
+  if (ABSOLUTE_URL_PATTERN.test(safePath)) {
+    return safePath;
+  }
+
+  const withoutLeadingSlash = safePath.startsWith("/")
+    ? safePath.slice(1)
+    : safePath;
 
   if (withoutLeadingSlash.includes("/")) {
     return withoutLeadingSlash;
@@ -26,19 +30,18 @@ function normalizeAudioPath(path: string, deckId: string): string {
   return `audio/${deckId}/${withoutLeadingSlash}`;
 }
 
+function isString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
 function assertValidCard(card: Partial<Card>): asserts card is Card {
-  if (
-    !card.id ||
-    typeof card.id !== "string" ||
-    !card.fr ||
-    typeof card.fr !== "string" ||
-    !card.en ||
-    typeof card.en !== "string" ||
-    !card.audio ||
-    typeof card.audio !== "string"
-  ) {
-    const identifier = card.id ?? "unknown";
-    throw new Error(`Invalid card: ${identifier}`);
+  if (!isString(card.id) || !isString(card.fr) || !isString(card.en)) {
+    const identifier = isString(card.id) ? card.id : "unknown";
+    throw new Error(`Invalid card payload: ${identifier}`);
+  }
+
+  if (!isString(card.audio)) {
+    throw new Error(`Invalid audio for card: ${card.id}`);
   }
 
   if (
@@ -46,8 +49,27 @@ function assertValidCard(card: Partial<Card>): asserts card is Card {
     card.audio_slow !== null &&
     typeof card.audio_slow !== "string"
   ) {
-    const identifier = card.id ?? "unknown";
-    throw new Error(`Invalid slow audio for card: ${identifier}`);
+    throw new Error(`Invalid slow audio for card: ${card.id}`);
+  }
+
+  if (card.notes !== undefined && card.notes !== null && typeof card.notes !== "string") {
+    throw new Error(`Invalid notes for card: ${card.id}`);
+  }
+
+  if (card.tags !== undefined && !Array.isArray(card.tags)) {
+    throw new Error(`Invalid tags for card: ${card.id}`);
+  }
+
+  if (card.tags && card.tags.some((tag) => typeof tag !== "string")) {
+    throw new Error(`Invalid tag value for card: ${card.id}`);
+  }
+
+  if (
+    card.sequence !== undefined &&
+    card.sequence !== null &&
+    Number.isNaN(Number(card.sequence))
+  ) {
+    throw new Error(`Invalid sequence for card: ${card.id}`);
   }
 }
 
@@ -82,12 +104,26 @@ export async function importDeckFromPublic(deckId: string): Promise<number> {
   return db.transaction("rw", db.cards, async () => {
     for (const card of cards) {
       assertValidCard(card);
+      const targetDeckId = isString(card.deckId) ? card.deckId : deckId;
       const normalizedCard: Card = {
-        ...card,
-        audio: normalizeAudioPath(card.audio, deckId),
+        id: card.id,
+        deckId: targetDeckId,
+        fr: card.fr,
+        en: card.en,
+        audio: normalizeAudioPath(card.audio, targetDeckId),
         audio_slow: card.audio_slow
-          ? normalizeAudioPath(card.audio_slow, deckId)
+          ? normalizeAudioPath(card.audio_slow, targetDeckId)
           : undefined,
+        notes: isString(card.notes) ? card.notes : undefined,
+        tags: Array.isArray(card.tags) && card.tags.length ? card.tags : undefined,
+        sequence:
+          card.sequence !== undefined && card.sequence !== null
+            ? Number(card.sequence)
+            : undefined,
+        externalId:
+          typeof card.externalId === "string" && card.externalId.trim().length
+            ? card.externalId.trim()
+            : undefined,
       };
       await db.cards.put(normalizedCard);
     }

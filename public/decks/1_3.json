@@ -1,0 +1,199 @@
+{
+  "id": "1_3",
+  "cards": [
+    {
+      "id": "Nga_Fr_Lessons-003-001",
+      "fr": "Je voudrais réserver pour ce soir",
+      "en": "I would like to book for tonight",
+      "audio": "audio/rec1646063577.mp3",
+      "deckId": "1_3",
+      "sequence": 1,
+      "externalId": "Nga_Fr_Lessons-003-001"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-002",
+      "fr": "J'ai réservé une table pour ce soir pour deux personnes",
+      "en": "I have booked a table for tonight for two people",
+      "audio": "audio/rec1646063588.mp3",
+      "deckId": "1_3",
+      "sequence": 2,
+      "externalId": "Nga_Fr_Lessons-003-002"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-003",
+      "fr": "Voulez-vous reserver une table pour ce soir?",
+      "en": "Do you want to book a table for tonight?",
+      "audio": "audio/rec1646063598.mp3",
+      "deckId": "1_3",
+      "notes": "form., 2",
+      "sequence": 3,
+      "externalId": "Nga_Fr_Lessons-003-003"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-004",
+      "fr": "Voulez-vous visiter Hanoi?",
+      "en": "Do you want to visit Hanoi?",
+      "audio": "audio/rec1646063606.mp3",
+      "deckId": "1_3",
+      "notes": "form., 2",
+      "sequence": 4,
+      "externalId": "Nga_Fr_Lessons-003-004"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-005",
+      "fr": "Typique",
+      "en": "Typical",
+      "audio": "audio/rec1646063611.mp3",
+      "deckId": "1_3",
+      "sequence": 5,
+      "externalId": "Nga_Fr_Lessons-003-005"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-006",
+      "fr": "Exotique",
+      "en": "Exotic",
+      "audio": "audio/rec1646063615.mp3",
+      "deckId": "1_3",
+      "sequence": 6,
+      "externalId": "Nga_Fr_Lessons-003-006"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-007",
+      "fr": "Politique",
+      "en": "Political",
+      "audio": "audio/rec1646063619.mp3",
+      "deckId": "1_3",
+      "sequence": 7,
+      "externalId": "Nga_Fr_Lessons-003-007"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-008",
+      "fr": "Romantic",
+      "en": "Romantic",
+      "audio": "audio/rec1646063622.mp3",
+      "deckId": "1_3",
+      "sequence": 8,
+      "externalId": "Nga_Fr_Lessons-003-008"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-009",
+      "fr": "Pratique",
+      "en": "Convenient ('Practical')",
+      "audio": "audio/rec1646063626.mp3",
+      "deckId": "1_3",
+      "sequence": 9,
+      "externalId": "Nga_Fr_Lessons-003-009"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-010",
+      "fr": "Parce que",
+      "en": "Because",
+      "audio": "audio/rec1646063643.mp3",
+      "deckId": "1_3",
+      "sequence": 10,
+      "externalId": "Nga_Fr_Lessons-003-010"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-011",
+      "fr": "Je voudrais visiter Paris parce que c'est exotique",
+      "en": "I would like to visit Paris because it's exotic",
+      "audio": "audio/rec1646063652.mp3",
+      "deckId": "1_3",
+      "sequence": 11,
+      "externalId": "Nga_Fr_Lessons-003-011"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-012",
+      "fr": "Est-ce que tu as preparé le café pour moi?",
+      "en": "Have you prepared the coffee for me?",
+      "audio": "audio/rec1646063661.mp3",
+      "deckId": "1_3",
+      "notes": "inf., 3",
+      "sequence": 12,
+      "externalId": "Nga_Fr_Lessons-003-012"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-013",
+      "fr": "Est-ce que c'est pratique?",
+      "en": "Is it convenient?",
+      "audio": "audio/rec1646063667.mp3",
+      "deckId": "1_3",
+      "notes": "3",
+      "sequence": 13,
+      "externalId": "Nga_Fr_Lessons-003-013"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-014",
+      "fr": "Je voudrais aller à Paris",
+      "en": "I would like to go to Paris",
+      "audio": "audio/rec1646063673.mp3",
+      "deckId": "1_3",
+      "sequence": 14,
+      "externalId": "Nga_Fr_Lessons-003-014"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-015",
+      "fr": "Je voudrais aller à ce café, est-ce qu'il est typique?",
+      "en": "I would like to go to this coffee shop, is it typical?",
+      "audio": "audio/rec1646063687.mp3",
+      "deckId": "1_3",
+      "sequence": 15,
+      "externalId": "Nga_Fr_Lessons-003-015"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-016",
+      "fr": "Savoir",
+      "en": "To know",
+      "audio": "audio/rec1646063701.mp3",
+      "deckId": "1_3",
+      "sequence": 16,
+      "externalId": "Nga_Fr_Lessons-003-016"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-017",
+      "fr": "Je voudrais savoir si c'est pratique",
+      "en": "I'd like to know if it's convenient",
+      "audio": "audio/rec1646063707.mp3",
+      "deckId": "1_3",
+      "sequence": 17,
+      "externalId": "Nga_Fr_Lessons-003-017"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-018",
+      "fr": "Voulez-vous reserver un table? Oui, mais je voudrais savoir si c'est pratique",
+      "en": "Do you want to book a table? Yes, but I would like to know if it's convenient",
+      "audio": "audio/rec1646063719.mp3",
+      "deckId": "1_3",
+      "notes": "form., 2",
+      "sequence": 18,
+      "externalId": "Nga_Fr_Lessons-003-018"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-019",
+      "fr": "Est-ce que vous voulez reserver un table?",
+      "en": "Do you want to book a table? (form., 3)",
+      "audio": "audio/rec1646063738.mp3",
+      "deckId": "1_3",
+      "sequence": 19,
+      "externalId": "Nga_Fr_Lessons-003-019"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-020",
+      "fr": "Pourquoi?",
+      "en": "Why?",
+      "audio": "audio/rec1646063744.mp3",
+      "deckId": "1_3",
+      "sequence": 20,
+      "externalId": "Nga_Fr_Lessons-003-020"
+    },
+    {
+      "id": "Nga_Fr_Lessons-003-021",
+      "fr": "Désolé!/Désolée!",
+      "en": "Sorry!",
+      "audio": "audio/rec1646063747.mp3",
+      "deckId": "1_3",
+      "sequence": 21,
+      "externalId": "Nga_Fr_Lessons-003-021"
+    }
+  ]
+}

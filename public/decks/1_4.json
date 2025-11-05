@@ -1,0 +1,184 @@
+{
+  "id": "1_4",
+  "cards": [
+    {
+      "id": "Nga_Fr_Lessons-004-001",
+      "fr": "Ce n'est pas",
+      "en": "It's not (\"this is not\")",
+      "audio": "audio/rec1646923056.mp3",
+      "deckId": "1_4",
+      "audio_slow": "audio/rec1646923070.mp3",
+      "notes": "sandwich",
+      "sequence": 1,
+      "externalId": "Nga_Fr_Lessons-004-001"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-002",
+      "fr": "C'est pas",
+      "en": "It's not (\"this is not\")",
+      "audio": "audio/rec1646923080.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 2,
+      "externalId": "Nga_Fr_Lessons-004-002"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-003",
+      "fr": "Non, c'est pas pratique",
+      "en": "No, it's not convenient",
+      "audio": "audio/rec1646923085.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 3,
+      "externalId": "Nga_Fr_Lessons-004-003"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-004",
+      "fr": "Je voudrais allez a Paris, mais c'est pas pratique",
+      "en": "I would like to go to Paris, but it's not convenient",
+      "audio": "audio/rec1646923091.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 4,
+      "externalId": "Nga_Fr_Lessons-004-004"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-005",
+      "fr": "Pourquoi c'est pas pratique?",
+      "en": "Why is it not convenient?",
+      "audio": "audio/rec1646923097.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 5,
+      "externalId": "Nga_Fr_Lessons-004-005"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-006",
+      "fr": "Je voudrais savoir pourquoi c'est pas pratique",
+      "en": "I would like to know why it's not convenient",
+      "audio": "audio/rec1646923104.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 6,
+      "externalId": "Nga_Fr_Lessons-004-006"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-007",
+      "fr": "Pourquoi tu as preparé le diné?",
+      "en": "Why have you prepared the coffee?",
+      "audio": "audio/rec1646923112.mp3",
+      "deckId": "1_4",
+      "sequence": 7,
+      "externalId": "Nga_Fr_Lessons-004-007"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-008",
+      "fr": "Tu as préparé le café?",
+      "en": "Have you prepared the coffee?",
+      "audio": "audio/rec1646923117.mp3",
+      "deckId": "1_4",
+      "notes": "Inf., 1",
+      "sequence": 8,
+      "externalId": "Nga_Fr_Lessons-004-008"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-009",
+      "fr": "Tu n'as pas préparé le café?",
+      "en": "Haven't you prepared the coffee?",
+      "audio": "audio/rec1646923122.mp3",
+      "deckId": "1_4",
+      "notes": "Inf., 1, sandwich",
+      "sequence": 9,
+      "externalId": "Nga_Fr_Lessons-004-009"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-010",
+      "fr": "Tu as pas préparé le café?",
+      "en": "Haven't you prepared the coffee?",
+      "audio": "audio/rec1646923127.mp3",
+      "deckId": "1_4",
+      "notes": "Inf., 1, sushi",
+      "sequence": 10,
+      "externalId": "Nga_Fr_Lessons-004-010"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-011",
+      "fr": "Je voudrais savoir pourquoi tu n'as pas préparé le café",
+      "en": "I would like to know why you haven't prepared the coffee",
+      "audio": "audio/rec1646923135.mp3",
+      "deckId": "1_4",
+      "notes": "sandwich",
+      "sequence": 11,
+      "externalId": "Nga_Fr_Lessons-004-011"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-012",
+      "fr": "J'ai faim, pourquoi tu as pas préparé le diné?",
+      "en": "I'm hungry, why haven't you prepare dthe dinner?",
+      "audio": "audio/rec1646923143.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 12,
+      "externalId": "Nga_Fr_Lessons-004-012"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-013",
+      "fr": "Je n'ai pas visité Paris",
+      "en": "I haven't visited Paris",
+      "audio": "audio/rec1646923150.mp3",
+      "deckId": "1_4",
+      "notes": "sandwich",
+      "sequence": 13,
+      "externalId": "Nga_Fr_Lessons-004-013"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-014",
+      "fr": "Je n'ai pas invité Jean au ciné(ma)",
+      "en": "I haven't invited Jean to the cinema",
+      "audio": "audio/rec1646923161.mp3",
+      "deckId": "1_4",
+      "notes": "sandwich",
+      "sequence": 14,
+      "externalId": "Nga_Fr_Lessons-004-014"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-015",
+      "fr": "J'ai pas préparé le café, désolé",
+      "en": "I haven't prepared the coffee, sorry",
+      "audio": "audio/rec1646923168.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 15,
+      "externalId": "Nga_Fr_Lessons-004-015"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-016",
+      "fr": "Désolé, mais j'ai pas préparé le café",
+      "en": "Sorry, but I haven't prepared the coffee",
+      "audio": "audio/rec1646923173.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 16,
+      "externalId": "Nga_Fr_Lessons-004-016"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-017",
+      "fr": "Français",
+      "en": "French",
+      "audio": "audio/rec1646923188.mp3",
+      "deckId": "1_4",
+      "sequence": 17,
+      "externalId": "Nga_Fr_Lessons-004-017"
+    },
+    {
+      "id": "Nga_Fr_Lessons-004-018",
+      "fr": "Désolé, mais j'ai pas réservé une table au restau Français",
+      "en": "Sorry, but I haven't booked a table at the French restaurant",
+      "audio": "audio/rec1646923199.mp3",
+      "deckId": "1_4",
+      "notes": "sushi",
+      "sequence": 18,
+      "externalId": "Nga_Fr_Lessons-004-018"
+    }
+  ]
+}

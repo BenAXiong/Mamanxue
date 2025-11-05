@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:decks": "node scripts/xlsx-to-decks.mjs"
   },
   "dependencies": {
     "dexie": "^4.2.1",
@@ -15,6 +16,7 @@
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.5",
     "workbox-window": "^7.3.0",
+    "xlsx": "^0.18.5",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
