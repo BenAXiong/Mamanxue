@@ -37,7 +37,7 @@ async function countMissingAudio(cards: Card[]): Promise<number> {
     }),
   );
 
-  return checks.reduce((sum: number, value) => sum + value, 0);
+  return checks.reduce<number>((sum, value) => sum + value, 0);
 }
 
 export async function listDecks(): Promise<DeckAggregation[]> {

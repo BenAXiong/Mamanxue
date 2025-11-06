@@ -42,6 +42,28 @@ export function Header() {
   const { isOnline } = useServiceWorker();
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const node = optionsRef.current;
+      if (!node || !node.open) {
+        return;
+      }
+      if (event.target instanceof Node && node.contains(event.target)) {
+        return;
+      }
+      node.open = false;
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown, true);
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown, true);
+    };
+  }, []);
+
+  useEffect(() => {
     const clearTimer = () => {
       if (finishingTimerRef.current !== null && typeof window !== "undefined") {
         window.clearTimeout(finishingTimerRef.current);
