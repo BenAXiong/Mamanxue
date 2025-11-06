@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import codexStatus, { type CodexStatus } from "../codexStatus";
-import SteartIcon from "../assets/steart_2.svg?react";
+import { ReactComponent as SteartIcon } from "../assets/steart_2.svg";
 import { useSessionStore } from "../store/session";
 import { useServiceWorker } from "../pwa/ServiceWorkerProvider";
 

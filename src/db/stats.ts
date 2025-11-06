@@ -73,15 +73,14 @@ export async function getDueForecast(days = 7): Promise<DueForecastEntry[]> {
   const allReviews = await db.reviews.toArray();
 
   for (let i = 0; i < days; i += 1) {
-    const date = new Date(today);
-    date.setDate(date.getDate() + i);
-    const startISO = new Date(date);
-    startISO.setHours(0, 0, 0, 0);
-    const endISO = new Date(date);
-    endISO.setHours(23, 59, 59, 999);
+    const dayStart = new Date(today);
+    dayStart.setDate(dayStart.getDate() + i);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setHours(23, 59, 59, 999);
 
-    const startKey = startISO.toISOString();
-    const endKey = endISO.toISOString();
+    const startKey = dayStart.toISOString();
+    const endKey = dayEnd.toISOString();
 
     const count = allReviews.filter((review) => {
       if (review.suspended) {
@@ -90,7 +89,7 @@ export async function getDueForecast(days = 7): Promise<DueForecastEntry[]> {
       return review.due >= startKey && review.due <= endKey;
     }).length;
 
-    forecast.push({ date: startISO.toISOString().slice(0, 10), count });
+    forecast.push({ date: dayStart.toISOString().slice(0, 10), count });
   }
 
   return forecast;
