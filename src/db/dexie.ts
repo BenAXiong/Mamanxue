@@ -69,7 +69,7 @@ export class MamanXueDB extends Dexie {
         await transaction
           .table("cards")
           .toCollection()
-          .modify((record: any) => {
+          .modify((record: Card) => {
             if (!record.deckId) {
               const nextDeckId = deriveDeckIdFromId(record.id);
               if (nextDeckId) {

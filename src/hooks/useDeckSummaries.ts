@@ -29,7 +29,11 @@ export function useDeckSummaries(): DeckSummary[] {
           }));
 
           const sortedBase = baseSummaries
-            .map(({ cards, ...rest }) => rest)
+            .map(({ deckId, count }) => ({
+              deckId,
+              count,
+              missingAudio: [] as string[],
+            }))
             .sort((a, b) => a.deckId.localeCompare(b.deckId));
 
           setSummaries(sortedBase);

@@ -3,6 +3,8 @@ import type { ChangeEvent, DragEvent, FormEvent } from "react";
 import type { Card } from "../db/dexie";
 import { db, deriveDeckIdFromId } from "../db/dexie";
 import { checkCardAudio } from "../utils/fileCheck";
+import { useServiceWorker } from "../pwa/ServiceWorkerProvider";
+import { useToast } from "../components/ToastProvider";
 
 type MappingField =
   | "id"
@@ -86,7 +88,7 @@ function createEmptyMapping(): FieldMapping {
 }
 
 function normalizeHeaderKey(value: string): string {
-  return value.replace(/[\s_\-]/g, "").toLowerCase();
+  return value.replace(/[\s_-]/g, "").toLowerCase();
 }
 
 function guessMapping(headers: string[]): FieldMapping {
@@ -512,6 +514,8 @@ export function ImportExportPage() {
   const [manualSaving, setManualSaving] = useState(false);
   const [exportDeckId, setExportDeckId] = useState("");
   const [exportStatus, setExportStatus] = useState<string | null>(null);
+  const { isOnline } = useServiceWorker();
+  const { showToast } = useToast();
 
   const mappingComplete = useMemo(
     () => REQUIRED_FIELDS.every((field) => Boolean(mapping[field])),
@@ -644,6 +648,10 @@ export function ImportExportPage() {
         errors: ["Load a CSV file before importing."],
         missingAudio: [],
       });
+      showToast({
+        message: "Load a CSV file before importing.",
+        variant: "warning",
+      });
       return;
     }
 
@@ -653,6 +661,10 @@ export function ImportExportPage() {
         updated: 0,
         errors: ["Map all required fields before importing."],
         missingAudio: [],
+      });
+      showToast({
+        message: "Map all required fields before importing.",
+        variant: "warning",
       });
       return;
     }
@@ -669,6 +681,10 @@ export function ImportExportPage() {
           updated: 0,
           errors,
           missingAudio: [],
+        });
+        showToast({
+          message: errors[0] ?? "Unable to map CSV rows.",
+          variant: "error",
         });
         return;
       }
@@ -710,6 +726,10 @@ export function ImportExportPage() {
         errors: [],
         missingAudio,
       });
+      showToast({
+        message: `Import complete. Added ${added}, updated ${updated}.`,
+        variant: "success",
+      });
 
       if (mappingKey) {
         saveMappingPreset(mappingKey, mapping, csvData.headers);
@@ -725,14 +745,28 @@ export function ImportExportPage() {
         ],
         missingAudio: [],
       });
+      showToast({
+        message:
+          error instanceof Error ? `Import failed: ${error.message}` : "Import failed unexpectedly.",
+        variant: "error",
+      });
     } finally {
       setImporting(false);
     }
-  }, [csvData, mapping, mappingComplete, mappingKey]);
+  }, [csvData, mapping, mappingComplete, mappingKey, showToast]);
 
   const handleSheetsFetch = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+
+      if (!isOnline) {
+        setSheetsStatus("Unavailable offline. Connect to the internet and try again.");
+        showToast({
+          message: "Google Sheets fetch unavailable offline.",
+          variant: "warning",
+        });
+        return;
+      }
 
       if (!sheetsUrl.trim()) {
         setSheetsStatus("Enter a published Google Sheets CSV URL.");
@@ -751,18 +785,38 @@ export function ImportExportPage() {
         const text = await response.text();
         loadCsvFromText(text, "Google Sheets CSV");
         setSheetsStatus("CSV loaded. Mapping ready below.");
+        showToast({
+          message: "Google Sheets CSV loaded.",
+          variant: "success",
+        });
       } catch (error) {
         setSheetsStatus(
           `Unable to fetch CSV (${error instanceof Error ? error.message : "Network error"}). Ensure the sheet is published to the web.`,
         );
+        showToast({
+          message:
+            error instanceof Error
+              ? `Google Sheets fetch failed: ${error.message}`
+              : "Google Sheets fetch failed.",
+          variant: "error",
+        });
       }
     },
-    [sheetsUrl, loadCsvFromText],
+    [isOnline, sheetsUrl, loadCsvFromText, showToast],
   );
 
   const handleDriveFetch = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+
+      if (!isOnline) {
+        setDriveStatus("Unavailable offline. Connect to the internet and try again.");
+        showToast({
+          message: "Google Drive fetch unavailable offline.",
+          variant: "warning",
+        });
+        return;
+      }
 
       if (!driveUrl.trim()) {
         setDriveStatus("Paste a Google Drive share link first.");
@@ -782,13 +836,24 @@ export function ImportExportPage() {
         const text = await response.text();
         loadCsvFromText(text, "Google Drive CSV");
         setDriveStatus("CSV loaded. Mapping ready below.");
+        showToast({
+          message: "Google Drive CSV downloaded.",
+          variant: "success",
+        });
       } catch (error) {
         setDriveStatus(
           `Download blocked (${error instanceof Error ? error.message : "Network error"}). Download manually and use the file picker if CORS persists.`,
         );
+        showToast({
+          message:
+            error instanceof Error
+              ? `Google Drive fetch failed: ${error.message}`
+              : "Google Drive fetch failed.",
+          variant: "error",
+        });
       }
     },
-    [driveUrl, loadCsvFromText],
+    [driveUrl, isOnline, loadCsvFromText, showToast],
   );
   const handleManualChange = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -1011,9 +1076,18 @@ export function ImportExportPage() {
               </span>{" "}
               → CSV; sharing alone does not bypass CORS.
             </div>
-            <button type="submit" className="btn-primary mt-1">
+            <button
+              type="submit"
+              className="btn-primary mt-1"
+              disabled={!isOnline}
+              aria-disabled={!isOnline}
+              title={!isOnline ? "Unavailable offline" : undefined}
+            >
               Fetch CSV
             </button>
+            {!isOnline ? (
+              <p className="text-xs text-amber-300">Unavailable offline.</p>
+            ) : null}
             {sheetsStatus ? (
               <p className="text-xs text-slate-400">{sheetsStatus}</p>
             ) : null}
@@ -1038,9 +1112,18 @@ export function ImportExportPage() {
               download is blocked by CORS, download manually and use the file
               picker above.
             </div>
-            <button type="submit" className="btn-secondary mt-1">
+            <button
+              type="submit"
+              className="btn-secondary mt-1"
+              disabled={!isOnline}
+              aria-disabled={!isOnline}
+              title={!isOnline ? "Unavailable offline" : undefined}
+            >
               Try fetch
             </button>
+            {!isOnline ? (
+              <p className="text-xs text-amber-300">Unavailable offline.</p>
+            ) : null}
             {driveStatus ? (
               <p className="text-xs text-slate-400">{driveStatus}</p>
             ) : null}

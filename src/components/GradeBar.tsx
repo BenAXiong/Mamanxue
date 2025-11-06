@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 
 interface GradeBarProps {
@@ -12,6 +13,11 @@ interface GradeBarProps {
 }
 
 const GRADES: Array<1 | 2 | 3> = [1, 2, 3];
+const GRADE_LABELS: Record<1 | 2 | 3, string> = {
+  1: "Again",
+  2: "Hard",
+  3: "Easy",
+};
 
 export function GradeBar({
   actions,
@@ -24,10 +30,42 @@ export function GradeBar({
   gradeDisabled,
 }: GradeBarProps) {
   const disableGrades = gradeDisabled || !revealed;
+  const supportsHaptics = useMemo(() => {
+    if (typeof window === "undefined" || typeof navigator === "undefined") {
+      return false;
+    }
+    if (typeof navigator.vibrate !== "function") {
+      return false;
+    }
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      return false;
+    }
+    const coarsePointer =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: coarse)").matches;
+    return coarsePointer;
+  }, []);
+
+  const handleGrade = useCallback(
+    (value: 1 | 2 | 3) => {
+      if (supportsHaptics && typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+        try {
+          navigator.vibrate(value === 1 ? [0, 35, 40, 55] : [0, 22]);
+        } catch {
+          // ignore vibration errors
+        }
+      }
+      onGrade?.(value);
+    },
+    [onGrade, supportsHaptics],
+  );
 
   return (
     <div
-      className="grade-bar fixed inset-x-0 bottom-0 z-40 bg-slate-950/90 shadow-[0_-10px_30px_rgba(0,0,0,0.35)] backdrop-blur"
+      className="grade-bar fixed inset-x-0 bottom-0 z-40 backdrop-blur"
       style={{
         paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
       }}
@@ -64,11 +102,17 @@ export function GradeBar({
             <button
               key={value}
               type="button"
-              onClick={() => onGrade?.(value)}
-              className="btn-primary text-lg"
+              onClick={() => handleGrade(value)}
+              className="btn-primary flex-col text-lg"
               disabled={disableGrades}
+              aria-label={`${GRADE_LABELS[value]} grade`}
             >
-              {value}
+              <span aria-hidden="true" className="text-2xl font-semibold leading-none">
+                {value}
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-wide">
+                {GRADE_LABELS[value]}
+              </span>
             </button>
           ))}
         </div>

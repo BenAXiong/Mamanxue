@@ -1,9 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useServiceWorker } from "../pwa/ServiceWorkerProvider";
 
 const HIDE_THRESHOLD = 12;
 
 export function Footer() {
   const [hidden, setHidden] = useState(false);
+  const { buildInfo } = useServiceWorker();
+
+  const buildLabel = useMemo(() => {
+    if (!buildInfo) {
+      return "Development build";
+    }
+    const builtOn = new Date(buildInfo.timestamp);
+    const formatted = Number.isNaN(builtOn.valueOf())
+      ? buildInfo.timestamp
+      : builtOn.toLocaleString();
+    return `Build ${buildInfo.version} • ${formatted}`;
+  }, [buildInfo]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -41,7 +54,7 @@ export function Footer() {
         hidden ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
-      <p>Built with love for spaced repetition · 曼曼學</p>
+      <p>{buildLabel}</p>
     </footer>
   );
 }

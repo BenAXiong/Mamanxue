@@ -1,5 +1,4 @@
 import { db } from "./dexie";
-import { nowISO } from "../store/srs";
 
 export interface StreakStats {
   todayReviewed: number;
@@ -44,7 +43,7 @@ export async function getReviewStats(): Promise<StreakStats> {
 
   let streak = 0;
   for (let i = 0; i < dailyCounts.length; i += 1) {
-    const { date, count } = dailyCounts[dailyCounts.length - 1 - i];
+    const { count } = dailyCounts[dailyCounts.length - 1 - i];
     if (count > 0) {
       streak += 1;
     } else if (i === 0) {

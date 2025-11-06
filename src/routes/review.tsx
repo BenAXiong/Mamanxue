@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AudioPlayer from "../components/AudioPlayer";
 import GradeBar from "../components/GradeBar";
+import { useToast } from "../components/ToastProvider";
 import type { Card } from "../db/dexie";
 import { db } from "../db/dexie";
 import { appendLog } from "../db/logs";
@@ -61,6 +62,7 @@ export function ReviewPage() {
     ...INITIAL_SESSION_STATS,
   }));
   const [autoReturnPending, setAutoReturnPending] = useState(false);
+  const { showToast } = useToast();
 
   const queueLength = queue.length;
 
@@ -217,7 +219,7 @@ export function ReviewPage() {
 
   const handleGrade = useCallback(
     async (grade: 1 | 2 | 3) => {
-      if (!currentCardId) {
+      if (!currentCardId || isGrading || loadingQueue) {
         return;
       }
 
@@ -270,6 +272,10 @@ export function ReviewPage() {
         setQueueError(
           error instanceof Error ? error.message : "Unable to save review.",
         );
+        showToast({
+          message: "Failed to save review. Please retry.",
+          variant: "error",
+        });
       } finally {
         setIsGrading(false);
       }
@@ -279,9 +285,12 @@ export function ReviewPage() {
       cardStartTime,
       currentCardId,
       deckId,
+      isGrading,
+      loadingQueue,
       markHard,
       mode,
       nextCard,
+      showToast,
       setSessionStats,
     ],
   );
@@ -306,10 +315,14 @@ export function ReviewPage() {
       setQueueError(
         error instanceof Error ? error.message : "Unable to disable card.",
       );
+      showToast({
+        message: "Unable to disable card.",
+        variant: "error",
+      });
     } finally {
       setIsGrading(false);
     }
-  }, [currentCardId, nextCard]);
+  }, [currentCardId, nextCard, showToast]);
 
   const handleToggleMode = useCallback(() => {
     setMode(mode === "input" ? "output" : "input");

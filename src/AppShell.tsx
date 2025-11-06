@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import UpdateBanner from "./components/UpdateBanner";
 import { useFirstRunBootstrap } from "./hooks/useFirstRunBootstrap";
 
 export interface AppShellProps {
@@ -16,6 +17,7 @@ export function AppShell({ hideFooter }: AppShellProps) {
     <div className="app-container">
       <Header />
       <main className="app-main">
+        <UpdateBanner />
         {bootstrapState === "running" ? (
           <div className="mb-4 rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-xs text-slate-300">
             Loading starter decks...

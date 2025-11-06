@@ -33,7 +33,19 @@ P3.4 - Card browser view with filters, audio controls, and suspend/hard actions.
 P3.5 - Added minimal stats snapshot with streaks and 7-day due forecast.
 
 2025-11-06
-P4.0 - Promoted a dedicated Stats header link and page, moving the “Today at a glance” and forecast modules out of Decks.
+P4.0 - Promoted a dedicated Stats header link and page, moving the "Today at a glance" and forecast modules out of Decks.
 P4.1 - Reworked the deck list header with inline continue CTA and aggregated review/fail/new counters aligned to parent decks.
 P4.2 - Streamlined deck rows with centered card totals, touch long-press / desktop hover actions, and menu icon replacement.
 P4.3 - Applied desktop polish by constraining the main content width and centering the layout without affecting mobile.
+P5.1 - Added installable manifest with themed icons and linked theme-color metadata for platform support.
+P5.2 - Integrated Workbox build pipeline with post-build precaching script and generated service worker.
+P5.3 - Implemented runtime MP3 caching with range request support and 30-day cache policy.
+P5.4 - Added stale-while-revalidate caching for deck JSON and ensured build metadata fetch bypasses cache.
+P5.5 - Built update banner, manual SW update controls, and surfaced build info across header/settings/footer.
+P5.6 - Delivered offline data reset workflow clearing caches, Dexie, and storage with user confirmation.
+P5.7 - Surfaced offline status badge and disabled network-bound import flows with contextual messaging.
+P5.8 - Enhanced mobile ergonomics with 48px buttons, grade bar polish, haptics, and system-aware theme toggle.
+P5.9 - Strengthened accessibility with grade labels, aria improvements, and theme-aware contrast adjustments.
+P5.10 - Introduced global toast system plus grade submission guardrails to prevent double submissions.
+P5.11 - Aligned build tooling for Vercel (Node 20, dist/sw output) and automated build metadata updates.
+P5.12 - Verified production build, precache manifest generation, and updated project log for Phase 5 completion.

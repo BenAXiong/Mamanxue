@@ -19,15 +19,15 @@ const END_OF_DAY_ISO = () => {
 };
 
 async function countMissingAudio(cards: Card[]): Promise<number> {
-  const checks = await Promise.all(
+  const checks: number[] = await Promise.all(
     cards.map(async (card) => {
       try {
         const result = await checkCardAudio(card);
         if (!result.audio) {
-          return 1;
+          return 1 as number;
         }
         if (card.audio_slow && result.audioSlow === false) {
-          return 1;
+          return 1 as number;
         }
         return 0;
       } catch (error) {
@@ -37,7 +37,7 @@ async function countMissingAudio(cards: Card[]): Promise<number> {
     }),
   );
 
-  return checks.reduce((sum, value) => sum + value, 0);
+  return checks.reduce((sum: number, value) => sum + value, 0);
 }
 
 export async function listDecks(): Promise<DeckAggregation[]> {
@@ -135,10 +135,7 @@ export async function renameDeck(oldId: string, newId: string): Promise<void> {
 
 export async function deleteDeck(deckId: string): Promise<void> {
   await db.transaction("rw", db.cards, db.reviews, db.logs, async () => {
-    const cardIds = await db.cards
-      .where("deckId")
-      .equals(deckId)
-      .primaryKeys<string>();
+    const cardIds = (await db.cards.where("deckId").equals(deckId).primaryKeys()) as string[];
 
     if (cardIds.length === 0) {
       return;
