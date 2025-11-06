@@ -39,12 +39,11 @@ export function AudioPlayer({
     }
 
     try {
-      if (element.readyState === 0) {
-        // Ensure the source is ready before attempting playback.
-        element.load();
+      element.currentTime = 0;
+      const playPromise = element.play();
+      if (playPromise) {
+        await playPromise;
       }
-
-      await element.play();
     } catch (error) {
       console.error("Unable to play audio file", error);
       onAutoPlayError?.(error);
@@ -72,7 +71,7 @@ export function AudioPlayer({
           void handlePlay();
         }}
         disabled={!available}
-        className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+        className="btn btn-primary w-full justify-center"
         aria-label={ariaLabel}
       >
         <span aria-hidden="true" className="text-base leading-none">

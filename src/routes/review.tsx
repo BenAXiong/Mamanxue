@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AudioPlayer from "../components/AudioPlayer";
-import DeckList from "../components/DeckList";
 import GradeBar from "../components/GradeBar";
 import type { Card } from "../db/dexie";
 import { db } from "../db/dexie";
@@ -12,8 +11,23 @@ import { useSessionStore } from "../store/session";
 import { createInitialReviewState, nowISO, scheduleNext } from "../store/srs";
 import { type AudioCheckResult, checkCardAudio } from "../utils/fileCheck";
 
+interface SessionStats {
+  reviewed: number;
+  hard: number;
+  again: number;
+  durationMs: number;
+}
+
+const INITIAL_SESSION_STATS: SessionStats = {
+  reviewed: 0,
+  hard: 0,
+  again: 0,
+  durationMs: 0,
+};
+
 export function ReviewPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const deckSummaries = useDeckSummaries();
   const mode = useSessionStore((state) => state.mode);
   const setMode = useSessionStore((state) => state.setMode);
@@ -37,6 +51,16 @@ export function ReviewPage() {
   const [markHard, setMarkHard] = useState(false);
   const [autoPlaySignal, setAutoPlaySignal] = useState(0);
   const [cardStartTime, setCardStartTime] = useState<number | null>(null);
+  const [visibleSentences, setVisibleSentences] = useState<
+    Record<"fr" | "en", boolean>
+  >({
+    fr: false,
+    en: false,
+  });
+  const [sessionStats, setSessionStats] = useState<SessionStats>(() => ({
+    ...INITIAL_SESSION_STATS,
+  }));
+  const [autoReturnPending, setAutoReturnPending] = useState(false);
 
   const queueLength = queue.length;
 
@@ -56,12 +80,40 @@ export function ReviewPage() {
         return previous;
       }
 
-      return {
-        audio: previous?.audio ?? true,
-        audioSlow: false,
-      };
-    });
+    return {
+      audio: previous?.audio ?? true,
+      audioSlow: false,
+    };
+  });
   }, []);
+
+  const revealAllSentences = useCallback(() => {
+    setVisibleSentences((previous) => {
+      if (previous.fr && previous.en) {
+        return previous;
+      }
+      return { fr: true, en: true };
+    });
+    if (!revealed) {
+      reveal();
+    }
+  }, [revealed, reveal]);
+
+  const handleSentenceReveal = useCallback(
+    (key: "fr" | "en") => {
+      setVisibleSentences((previous) => {
+        if (previous[key]) {
+          return previous;
+        }
+        const next = { ...previous, [key]: true };
+        if (!revealed && next.fr && next.en) {
+          reveal();
+        }
+        return next;
+      });
+    },
+    [revealed, reveal],
+  );
 
   const ensureDeckLoaded = useCallback(
     async (nextDeckId: string) => {
@@ -70,6 +122,8 @@ export function ReviewPage() {
       try {
         setDeck(nextDeckId);
         await loadQueueForToday(nextDeckId);
+        setSessionStats({ ...INITIAL_SESSION_STATS });
+        setAutoReturnPending(false);
       } catch (error) {
         console.error("Unable to load deck queue", error);
         setQueueError(
@@ -77,7 +131,7 @@ export function ReviewPage() {
         );
       }
     },
-    [loadQueueForToday, setDeck],
+    [loadQueueForToday, setAutoReturnPending, setDeck, setSessionStats],
   );
 
   const requestedDeck = searchParams.get("deck");
@@ -110,6 +164,7 @@ export function ReviewPage() {
       setAudioStatus(null);
       setCardError(null);
       setCardStartTime(null);
+      setVisibleSentences({ fr: false, en: false });
       return;
     }
 
@@ -128,7 +183,9 @@ export function ReviewPage() {
           return;
         }
         setCard(record);
+        setVisibleSentences({ fr: false, en: false });
         setCardStartTime(Date.now());
+        setAutoPlaySignal((value) => value + 1);
         const audio = await checkCardAudio(record);
         if (!cancelled) {
           setAudioStatus(audio);
@@ -154,11 +211,9 @@ export function ReviewPage() {
   }, [currentCardId]);
 
   const handleReveal = useCallback(() => {
-    reveal();
-    if (mode === "output") {
-      setAutoPlaySignal((value) => value + 1);
-    }
-  }, [mode, reveal]);
+    revealAllSentences();
+    setAutoPlaySignal((value) => value + 1);
+  }, [revealAllSentences]);
 
   const handleGrade = useCallback(
     async (grade: 1 | 2 | 3) => {
@@ -177,6 +232,8 @@ export function ReviewPage() {
 
         const durationMs = cardStartTime ? Date.now() - cardStartTime : 0;
         const logDeckId = card?.deckId ?? deckId ?? null;
+        const isAgain = grade === 1;
+        const isHard = grade === 2 || markHard;
 
         nextReview.suspended = false;
         if (markHard) {
@@ -196,6 +253,12 @@ export function ReviewPage() {
             durationMs,
           });
         }
+        setSessionStats((stats) => ({
+          reviewed: stats.reviewed + 1,
+          hard: stats.hard + (isHard ? 1 : 0),
+          again: stats.again + (isAgain ? 1 : 0),
+          durationMs: stats.durationMs + durationMs,
+        }));
         setMarkHard(false);
         nextCard({
           cardId: currentCardId,
@@ -211,7 +274,16 @@ export function ReviewPage() {
         setIsGrading(false);
       }
     },
-    [card, cardStartTime, currentCardId, deckId, markHard, mode, nextCard],
+    [
+      card,
+      cardStartTime,
+      currentCardId,
+      deckId,
+      markHard,
+      mode,
+      nextCard,
+      setSessionStats,
+    ],
   );
 
   const handleDisable = useCallback(async () => {
@@ -245,7 +317,9 @@ export function ReviewPage() {
 
   const handleResetSession = useCallback(() => {
     resetSession();
-  }, [resetSession]);
+    setSessionStats({ ...INITIAL_SESSION_STATS });
+    setAutoReturnPending(false);
+  }, [resetSession, setAutoReturnPending, setSessionStats]);
 
   const actionsSummary = useMemo(() => {
     const parts: string[] = [];
@@ -257,73 +331,102 @@ export function ReviewPage() {
     return parts.join(" | ");
   }, [hardQueueLength, mode, queueLength]);
 
-  const cardFront = useMemo(() => {
+  const sentenceOrder = useMemo(() => {
     if (!card) {
-      return { label: "", text: "" };
+      return [];
     }
     if (mode === "input") {
-      return { label: "Prompt (FR)", text: card.fr };
+      return [
+        {
+          key: "fr" as const,
+          heading: "Prompt (FR)",
+          role: "prompt" as const,
+          text: card.fr,
+        },
+        {
+          key: "en" as const,
+          heading: "Answer (EN)",
+          role: "answer" as const,
+          text: card.en,
+        },
+      ];
     }
-    return { label: "Prompt (EN)", text: card.en };
+    return [
+      {
+        key: "en" as const,
+        heading: "Prompt (EN)",
+        role: "prompt" as const,
+        text: card.en,
+      },
+      {
+        key: "fr" as const,
+        heading: "Answer (FR)",
+        role: "answer" as const,
+        text: card.fr,
+      },
+    ];
   }, [card, mode]);
 
-  const cardBack = useMemo(() => {
-    if (!card) {
-      return { label: "", text: "" };
-    }
-    if (mode === "input") {
-      return { label: "Answer (EN)", text: card.en };
-    }
-    return { label: "Answer (FR)", text: card.fr };
-  }, [card, mode]);
-
-  const showAudio = mode === "input" || revealed;
   const primaryAudioAvailable = audioStatus ? audioStatus.audio !== false : true;
   const slowAudioAvailable =
     card?.audio_slow ? audioStatus?.audioSlow !== false : true;
+  const allSentencesVisible = visibleSentences.fr && visibleSentences.en;
+  const sessionComplete =
+    !loadingQueue && !currentCardId && sessionStats.reviewed > 0;
+  const noCardsAvailable =
+    !loadingQueue && !currentCardId && sessionStats.reviewed === 0;
+  const sessionDurationLabel = formatSessionDuration(sessionStats.durationMs);
+
+  useEffect(() => {
+    if (!sessionComplete) {
+      setAutoReturnPending(false);
+      return;
+    }
+
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    setAutoReturnPending(true);
+    const timer = window.setTimeout(() => {
+      setAutoReturnPending(false);
+      navigate("/");
+    }, 6000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [navigate, sessionComplete, setAutoReturnPending]);
+
+  const handleReturnHome = useCallback(() => {
+    setAutoReturnPending(false);
+    navigate("/");
+  }, [navigate, setAutoReturnPending]);
 
   return (
     <div className="space-y-6 pb-32">
-      <DeckList
-        summaries={deckSummaries}
-        selectedDeckId={deckId}
-        onSelect={(nextId) => {
-          void ensureDeckLoaded(nextId);
-        }}
-      />
-
       <section className="space-y-6">
-        <header className="space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h1 className="text-3xl font-semibold text-white">Review</h1>
-              <p className="text-sm text-slate-400">
-                Daily queue pulls due reviews first, then up to ten new cards.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={handleToggleMode}
-                className="btn-secondary"
-              >
-                Toggle mode
-              </button>
-              <button
-                type="button"
-                onClick={handleResetSession}
-                className="btn-secondary"
-              >
-                Reset session
-              </button>
-            </div>
-          </div>
-          {deckId ? (
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Deck {deckId}
-            </p>
-          ) : null}
-        </header>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={handleToggleMode}
+            className="btn-secondary"
+          >
+            Toggle mode
+          </button>
+          <button
+            type="button"
+            onClick={handleResetSession}
+            className="btn-secondary"
+          >
+            Reset session
+          </button>
+        </div>
+        {deckId ? (
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Deck {deckId}
+          </p>
+        ) : null}
 
         {queueError ? (
           <div className="card space-y-2 p-4 text-sm text-red-200">
@@ -343,7 +446,46 @@ export function ReviewPage() {
           </div>
         ) : null}
 
-        {!loadingQueue && !currentCardId ? (
+        {sessionComplete ? (
+          <section className="card session-recap space-y-4 p-6 text-sm text-slate-200">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-semibold text-white">
+                Session complete!
+              </h2>
+              <p className="text-xs-muted">
+                {deckId ? `Deck ${deckId}` : "Selected deck"} is clear for now.
+                Reviewed {sessionStats.reviewed} card
+                {sessionStats.reviewed === 1 ? "" : "s"} in {sessionDurationLabel}.
+              </p>
+            </div>
+            <div className="session-recap-grid">
+              <div className="session-recap-pill">
+                <span className="label">Reviewed</span>
+                <span className="value">{sessionStats.reviewed}</span>
+              </div>
+              <div className="session-recap-pill">
+                <span className="label">Hard</span>
+                <span className="value">{sessionStats.hard}</span>
+              </div>
+              <div className="session-recap-pill">
+                <span className="label">Again</span>
+                <span className="value">{sessionStats.again}</span>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <button type="button" onClick={handleReturnHome} className="btn-primary">
+                Back to decks
+              </button>
+              {autoReturnPending ? (
+                <span className="text-xs-muted">
+                  Returning to decks automatically...
+                </span>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
+
+        {noCardsAvailable ? (
           <div className="card space-y-2 p-6 text-sm text-slate-300">
             <p>No cards due right now.</p>
             <p>
@@ -354,63 +496,68 @@ export function ReviewPage() {
         ) : null}
 
         {card ? (
-          <section className="card space-y-5 p-6">
-            <div className="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
-              <span>Queue remaining: {queueLength}</span>
-              {card.sequence !== undefined ? (
-                <span>Card {card.sequence}</span>
-              ) : null}
-            </div>
-
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <p className="text-xs uppercase tracking-wide text-slate-500">
-                  {cardFront.label}
-                </p>
-                <p className="text-xl font-semibold text-white">
-                  {cardFront.text}
-                </p>
+          <>
+            <section className="card review-stage space-y-6 p-6">
+              <div className="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
+                <span>Queue remaining: {queueLength}</span>
+                {card.sequence !== undefined ? (
+                  <span>Card {card.sequence}</span>
+                ) : null}
               </div>
 
-              {showAudio ? (
-                <div className="space-y-2">
+              <div className="review-sentence-stack space-y-4">
+                {sentenceOrder.map((sentence) => {
+                  const isVisible =
+                    sentence.key === "fr"
+                      ? visibleSentences.fr
+                      : visibleSentences.en;
+                  return (
+                    <button
+                      type="button"
+                      key={sentence.key}
+                      className={`sentence-panel ${
+                        sentence.role === "prompt"
+                          ? "sentence-role-prompt"
+                          : "sentence-role-answer"
+                      } ${isVisible ? "sentence-panel-visible" : "sentence-panel-blurred"}`}
+                      onClick={() => handleSentenceReveal(sentence.key)}
+                      aria-pressed={isVisible}
+                    >
+                      <span className="sentence-heading">{sentence.heading}</span>
+                      <span className="sentence-text">{sentence.text}</span>
+                      {!isVisible ? (
+                        <span className="sentence-mask">Tap to reveal</span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="review-audio-grid space-y-2">
+                <AudioPlayer
+                  src={card.audio}
+                  label="Play audio"
+                  autoPlaySignal={autoPlaySignal}
+                  available={primaryAudioAvailable}
+                  onLoadError={() => {
+                    markAudioUnavailable("audio");
+                  }}
+                />
+                {card.audio_slow ? (
                   <AudioPlayer
-                    src={card.audio}
-                    label="Play audio"
-                    autoPlaySignal={mode === "output" ? autoPlaySignal : undefined}
-                    available={primaryAudioAvailable}
+                    src={card.audio_slow}
+                    label="Slow audio"
+                    available={slowAudioAvailable}
                     onLoadError={() => {
-                      markAudioUnavailable("audio");
+                      markAudioUnavailable("audioSlow");
                     }}
                   />
-                  {card.audio_slow ? (
-                    <AudioPlayer
-                      src={card.audio_slow}
-                      label="Slow audio"
-                      available={slowAudioAvailable}
-                      onLoadError={() => {
-                        markAudioUnavailable("audioSlow");
-                      }}
-                    />
-                  ) : null}
-                </div>
-              ) : (
-                <p className="text-xs text-slate-400">
-                  Reveal to view the target language and audio.
-                </p>
-              )}
+                ) : null}
+              </div>
 
-              {revealed ? (
-                <div className="space-y-2 rounded-md border border-slate-800 bg-slate-900/50 p-4">
-                  <div className="space-y-1">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      {cardBack.label}
-                    </p>
-                    <p className="text-lg text-slate-100">{cardBack.text}</p>
-                  </div>
-                  {card.notes ? (
-                    <p className="text-sm text-slate-300">Notes: {card.notes}</p>
-                  ) : null}
+              {card.notes ? (
+                <div className="review-notes text-sm text-slate-200">
+                  Notes: {card.notes}
                 </div>
               ) : null}
 
@@ -426,8 +573,11 @@ export function ReviewPage() {
                   </span>
                 ) : null}
               </div>
-            </div>
-          </section>
+            </section>
+            {!allSentencesVisible ? (
+              <RevealAllFab onReveal={handleReveal} />
+            ) : null}
+          </>
         ) : null}
       </section>
 
@@ -444,6 +594,59 @@ export function ReviewPage() {
         />
       ) : null}
     </div>
+  );
+}
+
+function formatSessionDuration(durationMs: number): string {
+  if (!Number.isFinite(durationMs) || durationMs <= 0) {
+    return "0s";
+  }
+  const totalSeconds = Math.round(durationMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  if (minutes <= 0) {
+    return `${seconds}s`;
+  }
+  if (seconds === 0) {
+    return `${minutes}m`;
+  }
+  return `${minutes}m ${seconds}s`;
+}
+
+interface RevealAllFabProps {
+  onReveal: () => void;
+}
+
+function RevealAllFab({ onReveal }: RevealAllFabProps) {
+  return (
+    <button
+      type="button"
+      className="fab reveal-fab"
+      aria-label="Reveal both sentences"
+      onClick={onReveal}
+    >
+      <EyeIcon />
+    </button>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
   );
 }
 

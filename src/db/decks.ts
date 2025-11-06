@@ -6,6 +6,8 @@ export interface DeckAggregation {
   title?: string;
   total: number;
   dueToday: number;
+  hardCount: number;
+  newCount: number;
   suspended: number;
   missingAudio: number;
 }
@@ -60,9 +62,19 @@ export async function listDecks(): Promise<DeckAggregation[]> {
         ? await db.reviews.where("cardId").anyOf(cardIds).toArray()
         : [];
 
-      const suspended = reviews.filter((review) => review.suspended).length;
+      const suspendedIds = new Set(
+        reviews.filter((review) => review.suspended).map((review) => review.cardId),
+      );
+      const suspended = suspendedIds.size;
       const dueToday = reviews.filter(
         (review) => !review.suspended && review.due <= endOfTodayISO,
+      ).length;
+      const hardCount = reviews.filter(
+        (review) => !review.suspended && review.hardFlag,
+      ).length;
+      const reviewedIds = new Set(reviews.map((review) => review.cardId));
+      const newCount = deckCards.filter(
+        (card) => !reviewedIds.has(card.id) && !suspendedIds.has(card.id),
       ).length;
 
       const missingAudio = await countMissingAudio(deckCards);
@@ -71,6 +83,8 @@ export async function listDecks(): Promise<DeckAggregation[]> {
         deckId,
         total: deckCards.length,
         dueToday,
+        hardCount,
+        newCount,
         suspended,
         missingAudio,
       });

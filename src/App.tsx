@@ -5,6 +5,7 @@ import HomePage from "./routes/home";
 import { ImportExportPage } from "./routes/import";
 import ReviewPage from "./routes/review";
 import SettingsPage from "./routes/settings";
+import StatsPage from "./routes/stats";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<AppShell />}>
           <Route index element={<HomePage />} />
           <Route path="import" element={<ImportExportPage />} />
+          <Route path="stats" element={<StatsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -31,3 +31,9 @@ P3.2 - Deck manager wiring for Open/Browse and live counts.
 P3.3 - Added deck rename/delete with cascaded card, review, and log updates.
 P3.4 - Card browser view with filters, audio controls, and suspend/hard actions.
 P3.5 - Added minimal stats snapshot with streaks and 7-day due forecast.
+
+2025-11-06
+P4.0 - Promoted a dedicated Stats header link and page, moving the “Today at a glance” and forecast modules out of Decks.
+P4.1 - Reworked the deck list header with inline continue CTA and aggregated review/fail/new counters aligned to parent decks.
+P4.2 - Streamlined deck rows with centered card totals, touch long-press / desktop hover actions, and menu icon replacement.
+P4.3 - Applied desktop polish by constraining the main content width and centering the layout without affecting mobile.

@@ -26,6 +26,7 @@ export interface SessionState {
   reveal: () => void;
   nextCard: (result?: GradeResult) => void;
   resetSession: () => void;
+  suspendSession: () => void;
 }
 
 export const LAST_REVIEWED_DECK_KEY = "mamanxue:lastDeckId";
@@ -183,5 +184,17 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   resetSession: () => {
     set({ ...initialState });
     persistLastDeck(null);
+  },
+  suspendSession: () => {
+    const { deckId } = get();
+    set({
+      mode: "input",
+      currentCardId: null,
+      queue: [],
+      loading: false,
+      deckId,
+      revealed: false,
+      hardQueue: [],
+    });
   },
 }));
