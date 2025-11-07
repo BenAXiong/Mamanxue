@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "generate:decks": "node scripts/xlsx-to-decks.mjs",
+    "generate:icons": "node scripts/generate-icons.mjs",
     "codex:status": "node scripts/update-codex-status.mjs"
   },
   "dependencies": {
@@ -38,6 +39,7 @@
     "globals": "^16.4.0",
     "jsdom": "^24.1.3",
     "postcss": "^8.5.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.1.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
